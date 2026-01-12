@@ -16,12 +16,49 @@ import { auth, db } from './firebase';
 import { User, DEFAULT_USER } from '@/types/firebase';
 
 /**
+ * Reserved usernames that cannot be registered
+ */
+const RESERVED_USERNAMES = [
+    'admin',
+    'administrator',
+    'root',
+    'system',
+    'moderator',
+    'mod',
+    'support',
+    'help',
+    'hargao',
+    'api',
+    'www',
+    'mail',
+    'ftp',
+    'localhost',
+    'null',
+    'undefined',
+    'test',
+    'demo',
+];
+
+/**
+ * Check if username is reserved (blocked)
+ */
+export function isUsernameReserved(username: string): boolean {
+    return RESERVED_USERNAMES.includes(username.toLowerCase().trim());
+}
+
+/**
  * Check if username is available
  * Uses a separate 'usernames' collection for fast lookup
  */
 export async function isUsernameAvailable(username: string): Promise<boolean> {
     try {
         const normalizedUsername = username.toLowerCase().trim();
+
+        // Check reserved usernames first
+        if (isUsernameReserved(normalizedUsername)) {
+            return false;
+        }
+
         const usernameDoc = await getDoc(doc(db, 'usernames', normalizedUsername));
         return !usernameDoc.exists();
     } catch (error: any) {
@@ -57,7 +94,12 @@ export async function registerUser(
     const normalizedUsername = username.toLowerCase().trim();
 
     try {
-        // 1. Check if username is available FIRST
+        // 1. Check if username is reserved
+        if (isUsernameReserved(normalizedUsername)) {
+            throw { code: 'auth/username-reserved', message: 'This username is reserved and cannot be used.' };
+        }
+
+        // 2. Check if username is available
         const usernameAvailable = await isUsernameAvailable(normalizedUsername);
         if (!usernameAvailable) {
             throw { code: 'auth/username-taken', message: 'This username is already taken. Please choose another.' };

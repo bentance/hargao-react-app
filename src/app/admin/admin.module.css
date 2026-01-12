@@ -1,0 +1,426 @@
+/* Admin Page Styles */
+
+.main {
+    min-height: 100vh;
+    background: #1a1a2e;
+    color: #fff;
+}
+
+/* Login Screen */
+.loginContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    gap: 1.5rem;
+}
+
+.loginContainer h1 {
+    font-size: 2rem;
+    font-weight: 800;
+}
+
+.passwordInput {
+    padding: 1rem 1.5rem;
+    font-size: 1rem;
+    border: 3px solid #fff;
+    background: transparent;
+    color: #fff;
+    width: 300px;
+    text-align: center;
+}
+
+.passwordInput::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.loginButton {
+    padding: 0.75rem 2rem;
+    font-size: 1rem;
+    font-weight: 700;
+    background: #78aaa6;
+    color: #1a1a2e;
+    border: 3px solid #fff;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.loginButton:hover {
+    background: #fff;
+    transform: translateY(-2px);
+}
+
+.error {
+    color: #ff6b6b;
+    font-weight: 600;
+}
+
+/* Dashboard */
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 3px solid rgba(255, 255, 255, 0.2);
+}
+
+.header h1 {
+    font-size: 1.75rem;
+    font-weight: 800;
+}
+
+.stats {
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.content {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 2rem;
+}
+
+/* Sidebar - Users List */
+.sidebar {
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    padding: 1rem;
+    max-height: calc(100vh - 200px);
+    overflow-y: auto;
+}
+
+.sidebar h2 {
+    font-size: 1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.userList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.userItem {
+    padding: 0.75rem;
+    border: 2px solid transparent;
+    cursor: pointer;
+    margin-bottom: 0.5rem;
+    transition: all 0.2s;
+}
+
+.userItem:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.userItem.active {
+    background: rgba(120, 170, 166, 0.3);
+    border-color: #78aaa6;
+}
+
+.username {
+    display: block;
+    font-weight: 700;
+    color: #78aaa6;
+}
+
+.email {
+    display: block;
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.5);
+    margin-top: 0.25rem;
+}
+
+.tier {
+    display: inline-block;
+    font-size: 0.625rem;
+    text-transform: uppercase;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 0.125rem 0.5rem;
+    margin-top: 0.25rem;
+}
+
+/* Details Panel */
+.details {
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    padding: 1.5rem;
+    min-height: 400px;
+}
+
+.details h2 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+    color: #78aaa6;
+}
+
+.details h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.userInfo p {
+    margin: 0.5rem 0;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.userInfo code {
+    font-family: monospace;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 0.125rem 0.5rem;
+    font-size: 0.75rem;
+}
+
+.placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 300px;
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.empty {
+    color: rgba(255, 255, 255, 0.4);
+    font-style: italic;
+}
+
+/* Gallery Card */
+.galleryCard {
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+.galleryHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.galleryHeader h4 {
+    font-weight: 700;
+    margin: 0;
+}
+
+.published {
+    color: #2ecc71;
+    font-size: 0.75rem;
+}
+
+.draft {
+    color: #f39c12;
+    font-size: 0.75rem;
+}
+
+/* Paintings Grid */
+.paintingsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 0.75rem;
+    margin-top: 1rem;
+}
+
+.paintingThumb {
+    aspect-ratio: 1;
+    overflow: hidden;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    position: relative;
+}
+
+.paintingThumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.paintingThumb span {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 0.25rem;
+    font-size: 0.625rem;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .content {
+        grid-template-columns: 1fr;
+    }
+
+    .sidebar {
+        max-height: 300px;
+    }
+}
+
+/* User Header with Delete Button */
+.userHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.userHeader h2 {
+    margin: 0;
+}
+
+.deleteButton {
+    padding: 0.5rem 1rem;
+    background: #e74c3c;
+    color: white;
+    border: 2px solid #c0392b;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.deleteButton:hover {
+    background: #c0392b;
+    transform: translateY(-2px);
+}
+
+/* Delete Modal */
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 1rem;
+}
+
+.deleteModal {
+    background: #1a1a2e;
+    border: 3px solid #e74c3c;
+    max-width: 450px;
+    width: 100%;
+    padding: 2rem;
+}
+
+.deleteModal h2 {
+    color: #e74c3c;
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+}
+
+.deleteInfo {
+    background: rgba(231, 76, 60, 0.1);
+    border: 2px solid rgba(231, 76, 60, 0.3);
+    padding: 1rem;
+    margin: 1rem 0;
+    text-align: center;
+}
+
+.deleteInfo strong {
+    display: block;
+    font-size: 1.25rem;
+    color: #e74c3c;
+}
+
+.deleteInfo span {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.875rem;
+}
+
+.deleteWarning {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.875rem;
+    line-height: 1.6;
+    margin: 1rem 0;
+}
+
+.deleteNote {
+    background: rgba(241, 196, 15, 0.1);
+    border: 2px solid rgba(241, 196, 15, 0.3);
+    color: #f1c40f;
+    padding: 0.75rem;
+    font-size: 0.75rem;
+    margin: 1rem 0;
+}
+
+.deleteForm {
+    margin: 1.5rem 0;
+}
+
+.deleteForm label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.875rem;
+}
+
+.deleteActions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.cancelButton {
+    flex: 1;
+    padding: 0.75rem;
+    background: transparent;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.cancelButton:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.cancelButton:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.confirmDeleteButton {
+    flex: 1;
+    padding: 0.75rem;
+    background: #e74c3c;
+    border: 2px solid #c0392b;
+    color: white;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.confirmDeleteButton:hover {
+    background: #c0392b;
+}
+
+.confirmDeleteButton:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}

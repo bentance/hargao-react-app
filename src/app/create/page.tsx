@@ -297,6 +297,8 @@ export default function CreatePage() {
             // Handle specific Firebase errors
             if (error.code === 'auth/email-already-in-use') {
                 setSubmitError('This email is already registered. Please sign in instead.');
+            } else if (error.code === 'auth/username-reserved') {
+                setSubmitError('This username is reserved and cannot be used. Please choose another.');
             } else if (error.code === 'auth/username-taken') {
                 setSubmitError('This username is already taken. Please choose another.');
             } else if (error.code === 'auth/weak-password') {
