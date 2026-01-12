@@ -1,7 +1,9 @@
 'use client';
 
 import { useState, useRef, ChangeEvent, FormEvent, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { BRAND_CONFIG, GALLERY_OPTIONS } from '@/config';
+import { registerUser, createGallery, uploadProfileImage } from '@/lib';
 import styles from './create.module.css';
 
 interface Painting {
@@ -33,7 +35,7 @@ interface FormData {
     environment: number;
     character: number;
     // Future versions
-    theme: string;
+    uiTheme: number;
     enableFootsteps: boolean;
     footstepsVolume: number;
     showWatermark: boolean;
@@ -47,6 +49,12 @@ interface FormData {
 }
 
 export default function CreatePage() {
+    const router = useRouter();
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [submitError, setSubmitError] = useState<string | null>(null);
+    const [showSuccessModal, setShowSuccessModal] = useState(false);
+    const [publishedGalleryUrl, setPublishedGalleryUrl] = useState<string>('');
+
     const [formData, setFormData] = useState<FormData>({
         // Account (Required)
         email: '',
@@ -65,13 +73,13 @@ export default function CreatePage() {
         galleryName: 'my-gallery',
         gallerySlug: 'my-gallery',
         galleryDescription: '',
-        environment: 1,
-        character: 1,
-        // Future versions - defaults
-        theme: 'dark',
-        enableFootsteps: true,
-        footstepsVolume: 50,
-        showWatermark: true,
+        environment: GALLERY_OPTIONS.defaultUI.environment,
+        character: GALLERY_OPTIONS.defaultUI.character,
+        // Future versions - defaults (using config values)
+        uiTheme: GALLERY_OPTIONS.defaultUI.uiTheme,
+        enableFootsteps: GALLERY_OPTIONS.defaultAudio.enableFootsteps,
+        footstepsVolume: GALLERY_OPTIONS.defaultAudio.footstepsVolume,
+        showWatermark: GALLERY_OPTIONS.defaultBranding.showWatermark,
 
         paintings: [
             { id: 1, file: null, preview: null, title: '', description: '' }
@@ -189,40 +197,141 @@ export default function CreatePage() {
         });
     };
 
-    const handleSubmit = (e: FormEvent, isDraft: boolean) => {
+    const handleSubmit = async (e: FormEvent, isDraft: boolean) => {
         e.preventDefault();
+        setSubmitError(null);
 
         // Basic validation
         if (!formData.email || !formData.password || !formData.confirmPassword || !formData.username) {
-            alert('Please fill in all required fields (marked with *)');
+            setSubmitError('Please fill in all required fields (marked with *)');
             return;
         }
 
         if (formData.password !== formData.confirmPassword) {
-            alert('Passwords do not match!');
+            setSubmitError('Passwords do not match!');
+            return;
+        }
+
+        if (formData.password.length < 8) {
+            setSubmitError('Password must be at least 8 characters');
+            return;
+        }
+
+        // Check for letters, numbers, and special characters
+        const hasLetter = /[a-zA-Z]/.test(formData.password);
+        const hasNumber = /[0-9]/.test(formData.password);
+        const hasSpecial = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(formData.password);
+
+        if (!hasLetter || !hasNumber || !hasSpecial) {
+            setSubmitError('Password must contain letters, numbers, and special characters (!@#$%^&*...)');
             return;
         }
 
         if (!formData.paintings.some(p => p.file)) {
-            alert('Please upload at least one painting');
+            setSubmitError('Please upload at least one painting');
             return;
         }
 
         if (!formData.agreeToTerms) {
-            alert('Please agree to the Terms & Conditions');
+            setSubmitError('Please agree to the Terms & Conditions');
             return;
         }
 
-        console.log('Form submitted:', { ...formData, isDraft });
-        // TODO: Implement form submission logic
-        alert(isDraft ? 'Draft saved!' : 'Gallery published!');
+        setIsSubmitting(true);
+
+        try {
+            console.log('🚀 Starting submission...');
+
+            // 1. Register the user
+            console.log('📝 Registering user...');
+            const { user, userData } = await registerUser(
+                formData.email,
+                formData.password,
+                formData.username,
+                formData.username, // displayName = username for now
+                null, // photoURL will be uploaded separately
+                formData.bio,
+                {
+                    website: formData.website || undefined,
+                    instagram: formData.instagram || undefined,
+                }
+            );
+
+            // 2. Upload profile image if provided
+            let profileURL = null;
+            if (formData.profileImage) {
+                console.log('📷 Uploading profile image...');
+                profileURL = await uploadProfileImage(user.uid, formData.profileImage);
+            }
+
+            // 3. Create the gallery with paintings
+            console.log('🎨 Creating gallery...');
+            const gallery = await createGallery(
+                user.uid,
+                formData.username.toLowerCase(),
+                {
+                    galleryName: formData.galleryName,
+                    gallerySlug: formData.gallerySlug,
+                    galleryDescription: formData.galleryDescription,
+                    environment: formData.environment,
+                    character: formData.character,
+                    uiTheme: formData.uiTheme,
+                    enableFootsteps: formData.enableFootsteps,
+                    footstepsVolume: formData.footstepsVolume,
+                    showWatermark: formData.showWatermark,
+                    paintings: formData.paintings.filter(p => p.file !== null),
+                },
+                !isDraft // publish = true if not a draft
+            );
+
+            console.log('✅ Gallery created successfully!', gallery.id);
+
+            // 4. Show success modal
+            const galleryUrl = `/@${formData.username.toLowerCase()}/${formData.gallerySlug}`;
+            setPublishedGalleryUrl(galleryUrl);
+            setShowSuccessModal(true);
+
+        } catch (error: any) {
+            console.error('❌ Submission error:', error);
+
+            // Handle specific Firebase errors
+            if (error.code === 'auth/email-already-in-use') {
+                setSubmitError('This email is already registered. Please sign in instead.');
+            } else if (error.code === 'auth/username-taken') {
+                setSubmitError('This username is already taken. Please choose another.');
+            } else if (error.code === 'auth/weak-password') {
+                setSubmitError('Password is too weak. Please use at least 8 characters with letters, numbers, and special characters.');
+            } else if (error.code === 'auth/invalid-email') {
+                setSubmitError('Please enter a valid email address.');
+            } else {
+                setSubmitError(error.message || 'An error occurred. Please try again.');
+            }
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     const selectedPainting = formData.paintings[formData.selectedPaintingIndex];
 
+    const handleCopyLink = () => {
+        const fullUrl = window.location.origin + publishedGalleryUrl;
+        navigator.clipboard.writeText(fullUrl);
+        alert('Link copied to clipboard!');
+    };
+
+    const handleVisitGallery = () => {
+        // For now, show where it would go (the actual gallery viewer would be a separate app)
+        window.open(publishedGalleryUrl, '_blank');
+    };
+
     return (
         <main className={styles.main}>
             <div className="page-container">
+                {/* Home Button */}
+                <a href="/" className={styles.homeButton}>
+                    ← Back to Home
+                </a>
+
                 {/* Page Header */}
                 <header className="page-header">
                     <h1>Hargao - Create Your Gallery</h1>
@@ -664,14 +773,66 @@ export default function CreatePage() {
                         </label>
                     </div>
 
+                    {/* Error Display */}
+                    {submitError && (
+                        <div className={styles.errorMessage}>
+                            ⚠️ {submitError}
+                        </div>
+                    )}
+
                     {/* Action Buttons */}
                     <div className="action-buttons">
-                        <button type="submit" className="neo-btn neo-btn--primary">
-                            🚀 Publish Gallery
+                        <button
+                            type="submit"
+                            className="neo-btn neo-btn--primary"
+                            disabled={isSubmitting}
+                        >
+                            {isSubmitting ? '⏳ Publishing...' : '🚀 Publish Gallery'}
                         </button>
                     </div>
                 </form>
             </div>
+
+            {/* Success Modal */}
+            {showSuccessModal && (
+                <div className={styles.modalOverlay}>
+                    <div className={styles.modal}>
+                        <div className={styles.modalHeader}>
+                            <h2>🎉 Gallery Published!</h2>
+                        </div>
+                        <div className={styles.modalContent}>
+                            <p>Your gallery is now live and ready to share!</p>
+                            <div className={styles.galleryUrlBox}>
+                                <span className={styles.galleryUrlLabel}>Gallery URL:</span>
+                                <code className={styles.galleryUrl}>{publishedGalleryUrl}</code>
+                            </div>
+                        </div>
+                        <div className={styles.modalActions}>
+                            <button
+                                type="button"
+                                className={styles.copyButton}
+                                onClick={handleCopyLink}
+                            >
+                                📋 Copy Link
+                            </button>
+                            <button
+                                type="button"
+                                className={styles.visitButton}
+                                onClick={handleVisitGallery}
+                            >
+                                🚀 Visit Gallery
+                            </button>
+                        </div>
+                        <button
+                            type="button"
+                            className={styles.closeModalButton}
+                            onClick={() => setShowSuccessModal(false)}
+                        >
+                            Close
+                        </button>
+                    </div>
+                </div>
+            )}
         </main>
     );
 }

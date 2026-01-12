@@ -5,7 +5,7 @@
 
 export const BRAND_CONFIG = {
     // Brand Identity
-    name: "Gallery Creator",
+    name: "Hargao",
     tagline: "Create Your Immersive Art Gallery",
 
     // Logo (can be a path to an image or null for text-only)
@@ -57,13 +57,43 @@ export const GALLERY_OPTIONS = {
         { id: 2, label: "Mannequin", image: "/images/characters/mannequin.jpg" },
     ],
 
-    themes: [
-        { id: "dark", label: "Dark", icon: "🌙" },
-        { id: "light", label: "Light", icon: "☀️" },
-        { id: "neon", label: "Neon", icon: "💜" },
-        { id: "vintage", label: "Vintage", icon: "📷" },
-        { id: "minimal", label: "Minimal", icon: "⬜" },
+    // UI Themes (matching Babylon.js app)
+    // 0=Classic Dark, 1=Light Minimal, 2=Neon Cyberpunk, 3=Elegant Museum, 4=Classic macOS
+    uiThemes: [
+        { id: 0, label: "Classic Dark", description: "Gold accents on dark" },
+        { id: 1, label: "Light Minimal", description: "Clean white" },
+        { id: 2, label: "Neon Cyberpunk", description: "Pink/cyan glow" },
+        { id: 3, label: "Elegant Museum", description: "Warm brown tones" },
+        { id: 4, label: "Classic macOS", description: "Aqua-inspired" },
     ],
+
+    // Default UI Settings (pre-selected options for new galleries)
+    defaultUI: {
+        environment: 1,        // Default to Brutalist Art Gallery (1-4)
+        character: 1,          // Default to Female (0=Bear, 1=Female, 2=Mannequin)
+        uiTheme: 4,            // Default to Classic macOS (0-4)
+    },
+
+    // Default Audio Settings
+    defaultAudio: {
+        enableFootsteps: true,
+        footstepsVolume: 4,    // 1-10
+        backgroundMusicVolume: 5, // 1-10
+    },
+
+    // Default Branding Settings
+    defaultBranding: {
+        showWatermark: true,
+        customWatermark: null as string | null,
+    },
+
+    // Default Access Settings
+    defaultAccess: {
+        isPasswordProtected: false,
+    },
+
+    // Subscription Tier (default for new users)
+    defaultTier: "free" as "free" | "premium" | "admin",
 
     maxPaintings: 10,
     minPaintings: 1,
