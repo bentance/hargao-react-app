@@ -1,0 +1,374 @@
+/* Create Page Specific Styles */
+
+/* Required Field Asterisk */
+.required {
+    color: var(--color-error);
+    font-weight: 700;
+}
+
+/* Optional Label */
+.optional {
+    color: #888;
+    font-weight: 400;
+    font-size: 0.75rem;
+    text-transform: none;
+}
+
+/* Header Info Notes (shared style) */
+.infoNote {
+    display: inline-block;
+    margin-top: var(--space-md);
+    margin-left: var(--space-sm);
+    margin-right: var(--space-sm);
+    padding: var(--space-sm) var(--space-md);
+    background: var(--color-text);
+    border: 2px solid white;
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: white;
+}
+
+/* Info Notes Container */
+.infoNotesContainer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-sm);
+    margin-top: var(--space-md);
+}
+
+/* Terms & Conditions Container */
+.termsContainer {
+    display: flex;
+    justify-content: center;
+    padding: var(--space-lg);
+    margin-top: var(--space-lg);
+    background: var(--color-surface);
+    border: var(--border-thick);
+}
+
+.termsLink {
+    color: var(--color-accent);
+    text-decoration: underline;
+    font-weight: 600;
+}
+
+.termsLink:hover {
+    color: var(--color-pink);
+}
+
+/* Optional Label (under upload photo) */
+.optionalLabel {
+    display: block;
+    margin-top: var(--space-sm);
+    font-size: 0.75rem;
+    color: #666;
+    text-align: center;
+}
+
+/* Section Subtitles */
+.sectionSubtitle {
+    font-size: 1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: var(--space-lg);
+    color: var(--color-text);
+}
+
+/* Account Section */
+.accountSection {
+    margin-bottom: var(--space-lg);
+}
+
+/* Profile Section */
+.profileSection {
+    margin-top: var(--space-lg);
+}
+
+/* Divider */
+.divider {
+    height: 3px;
+    background: var(--color-border);
+    margin: var(--space-xl) 0;
+}
+
+/* Hint Text */
+.hint {
+    display: block;
+    font-size: 0.75rem;
+    color: #888;
+    margin-top: var(--space-xs);
+    font-style: italic;
+}
+
+/* Step Note */
+.stepNote {
+    display: inline-block;
+    padding: var(--space-sm) var(--space-md);
+    background: var(--color-accent);
+    border: 2px solid var(--color-border);
+    font-weight: 600;
+    font-size: 0.875rem;
+    margin-bottom: var(--space-lg);
+}
+
+.main {
+    min-height: 100vh;
+    background:
+        radial-gradient(circle at 10% 20%, var(--color-accent) 0%, transparent 20%),
+        radial-gradient(circle at 90% 80%, var(--color-pink) 0%, transparent 20%),
+        radial-gradient(circle at 50% 50%, var(--color-cyan) 0%, transparent 30%),
+        var(--color-bg);
+    padding-bottom: var(--space-2xl);
+}
+
+/* Profile Section Grid */
+.profileGrid {
+    display: grid;
+    grid-template-columns: 140px 1fr;
+    gap: var(--space-xl);
+    align-items: start;
+}
+
+.profileImageSection {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.profileUpload {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.profilePreview {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Two Column Layout */
+.twoColumns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-lg);
+}
+
+/* Slug Input */
+.slugInput {
+    flex: 1;
+    border: none;
+    background: transparent;
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    padding: 0;
+    outline: none;
+}
+
+.slugInput::placeholder {
+    color: #999;
+}
+
+/* Read-only Slug Display */
+.slugDisplay {
+    flex: 1;
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    color: var(--color-text);
+    font-weight: 600;
+}
+
+/* Options Row */
+.optionsRow {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-lg);
+}
+
+/* Option Grid for Environment/Character Selection */
+.optionGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: var(--space-md);
+}
+
+.optionCard {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: var(--space-sm);
+    background: var(--color-surface);
+    border: 3px solid var(--color-border);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.optionCard:hover {
+    transform: translateY(-2px);
+    box-shadow: 4px 4px 0 var(--color-border);
+}
+
+.optionCardActive {
+    background: var(--color-accent);
+    box-shadow: 4px 4px 0 var(--color-border);
+}
+
+.optionImage {
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    background: var(--color-bg);
+    border: 2px solid var(--color-border);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.optionImage img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.optionLabel {
+    margin-top: var(--space-sm);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    text-align: center;
+    color: var(--color-text);
+}
+
+/* Remove Button on Paintings */
+.removeBtn {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    width: 24px;
+    height: 24px;
+    background: var(--color-error);
+    color: white;
+    border: 2px solid var(--color-border);
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.15s ease;
+}
+
+.painting-thumb:hover .removeBtn,
+.removeBtn:focus {
+    opacity: 1;
+}
+
+:global(.painting-thumb):hover .removeBtn {
+    opacity: 1;
+}
+
+/* Painting Editor */
+.paintingEditor {
+    margin-top: var(--space-xl);
+    border: var(--border-thick);
+    background: var(--color-bg);
+}
+
+.paintingEditorHeader {
+    padding: var(--space-md) var(--space-lg);
+    background: var(--color-lime);
+    border-bottom: var(--border-thick);
+}
+
+.selectedLabel {
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.875rem;
+}
+
+.paintingEditorContent {
+    padding: var(--space-lg);
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: var(--space-xl);
+    align-items: start;
+}
+
+.paintingUploadBox {
+    width: 200px;
+    height: 200px;
+}
+
+.paintingUploadPreview {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    background: var(--color-surface);
+}
+
+/* Footer */
+.footer {
+    text-align: center;
+    margin-top: var(--space-2xl);
+    padding: var(--space-lg);
+    font-size: 0.875rem;
+    color: #666;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .profileGrid {
+        grid-template-columns: 1fr;
+        justify-items: center;
+    }
+
+    .twoColumns {
+        grid-template-columns: 1fr;
+    }
+
+    .paintingEditorContent {
+        grid-template-columns: 1fr;
+    }
+
+    .paintingUploadBox {
+        width: 100%;
+        height: 200px;
+    }
+
+    .optionsRow {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+/* Decorative Background Pattern */
+.main::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image:
+        repeating-linear-gradient(0deg,
+            transparent,
+            transparent 50px,
+            rgba(26, 26, 46, 0.02) 50px,
+            rgba(26, 26, 46, 0.02) 51px),
+        repeating-linear-gradient(90deg,
+            transparent,
+            transparent 50px,
+            rgba(26, 26, 46, 0.02) 50px,
+            rgba(26, 26, 46, 0.02) 51px);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.main>* {
+    position: relative;
+    z-index: 1;
+}
