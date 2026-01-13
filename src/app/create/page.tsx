@@ -338,6 +338,16 @@ export default function CreatePage() {
                 <header className="page-header">
                     <h1>Hargao - Create Your Gallery</h1>
                     <p>Build your immersive virtual art exhibition</p>
+
+                    {/* Hero GIF */}
+                    <div className={styles.heroGifContainer}>
+                        <img
+                            src="/gif_for_create_image_v0.gif"
+                            alt="Gallery preview"
+                            className={styles.heroGif}
+                        />
+                    </div>
+
                     <div className={styles.infoNotesContainer}>
                         <span className={styles.infoNote}>⏱️ Approx. 5 mins to fill up and publish!</span>
                         <span className={styles.infoNote}><span className={styles.required}>*</span> is mandatory</span>
@@ -815,14 +825,14 @@ export default function CreatePage() {
                                 className={styles.copyButton}
                                 onClick={handleCopyLink}
                             >
-                                📋 Copy Link
+                                Copy Link
                             </button>
                             <button
                                 type="button"
                                 className={styles.visitButton}
                                 onClick={handleVisitGallery}
                             >
-                                🚀 Visit Gallery
+                                Visit Gallery
                             </button>
                         </div>
                         <button

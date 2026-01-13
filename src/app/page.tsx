@@ -18,7 +18,7 @@ export default function Home() {
 
           <div className={styles.actions}>
             <Link href="/create" className={styles.primaryBtn}>
-              🎨 Create Your Gallery
+              Create Your Gallery
             </Link>
           </div>
         </div>

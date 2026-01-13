@@ -1,0 +1,54 @@
+.main {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    color: white;
+    text-align: center;
+    padding: 2rem;
+}
+
+.container {
+    max-width: 500px;
+}
+
+.code {
+    font-size: 8rem;
+    font-weight: 900;
+    line-height: 1;
+    margin: 0;
+    background: linear-gradient(135deg, #78aaa6, #e8b4b8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.title {
+    font-size: 2rem;
+    font-weight: 800;
+    margin: 1rem 0;
+    text-transform: uppercase;
+}
+
+.message {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 1rem;
+    margin-bottom: 2rem;
+}
+
+.homeButton {
+    display: inline-block;
+    padding: 1rem 2rem;
+    background: #78aaa6;
+    color: #1a1a2e;
+    font-weight: 700;
+    text-decoration: none;
+    border: 3px solid white;
+    transition: all 0.2s;
+}
+
+.homeButton:hover {
+    background: white;
+    transform: translateY(-3px);
+}
