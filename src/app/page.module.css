@@ -14,78 +14,124 @@
   overflow: hidden;
 }
 
-.hero {
+.container {
   text-align: center;
   position: relative;
   z-index: 2;
   padding: var(--space-2xl);
+  max-width: 700px;
+  width: 100%;
 }
 
-.heroContent {
-  background: var(--color-surface);
-  border: var(--border-thick);
-  box-shadow: var(--shadow-xl);
-  padding: var(--space-2xl) calc(var(--space-2xl) * 2);
-  position: relative;
+.header {
+  margin-bottom: var(--space-2xl);
+}
+
+.greeting {
+  font-size: 1.5rem;
+  font-style: italic;
+  color: var(--color-text);
+  margin-bottom: var(--space-sm);
 }
 
 .title {
-  font-size: 4rem;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--color-text);
+  text-transform: none;
+}
+
+/* Action Cards */
+.actionCards {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-lg);
+  margin-bottom: var(--space-2xl);
+}
+
+.actionCard {
+  border: 3px solid var(--color-border);
+  padding: var(--space-xl);
+  text-decoration: none;
+  color: var(--color-text);
+  transition: all 0.15s ease;
+  text-align: center;
+}
+
+.actionCard:hover {
+  transform: translate(-4px, -4px);
+  box-shadow: 6px 6px 0 var(--color-border);
+  text-decoration: none;
+}
+
+.actionCard h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
   margin-bottom: var(--space-md);
-  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-purple) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  text-transform: none;
 }
 
-.logo {
-  max-width: 300px;
-  height: auto;
+.actionCard p {
+  font-size: 0.8rem;
+  color: var(--color-text);
+  opacity: 0.8;
+  margin: var(--space-xs) 0;
 }
 
-.tagline {
-  font-size: 1.25rem;
-  color: #666;
-  margin-bottom: var(--space-xl);
-  font-weight: 500;
+/* Card Colors - Swapped */
+.cardCreate {
+  background: var(--color-accent);
 }
 
-.actions {
+.cardExplore {
+  background: var(--color-primary);
+  color: var(--color-text);
+}
+
+.cardExplore p {
+  color: var(--color-text);
+}
+
+/* Footer Links */
+.footerLinks {
   display: flex;
   justify-content: center;
-  gap: var(--space-lg);
-  flex-wrap: wrap;
+  gap: var(--space-2xl);
+  margin-bottom: var(--space-xl);
 }
 
-.primaryBtn {
-  display: inline-flex;
-  align-items: center;
+.footerLink {
+  font-size: 1rem;
+  color: var(--color-text);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.footerLink:hover {
+  color: var(--color-primary);
+}
+
+/* Feedback Button */
+.feedbackContainer {
+  display: flex;
   justify-content: center;
-  gap: var(--space-sm);
-  padding: var(--space-lg) calc(var(--space-xl) * 1.5);
-  font-family: var(--font-heading);
-  font-size: 1.25rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.02em;
-  border: var(--border-thick);
-  background: var(--color-primary);
+}
+
+.feedbackBtn {
+  padding: var(--space-sm) var(--space-xl);
+  border: 2px solid var(--color-border);
+  background: var(--color-purple);
   color: white;
-  cursor: pointer;
-  box-shadow: var(--shadow-lg);
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-decoration: none;
   transition: all 0.15s ease;
-  text-decoration: none;
 }
 
-.primaryBtn:hover {
-  transform: translate(-4px, -4px);
-  box-shadow: 10px 10px 0 var(--color-border);
+.feedbackBtn:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 4px 4px 0 var(--color-border);
   text-decoration: none;
-}
-
-.primaryBtn:active {
-  transform: translate(2px, 2px);
-  box-shadow: var(--shadow-sm);
 }
 
 /* Decorative Shapes */
@@ -105,8 +151,8 @@
   height: 100px;
   background: var(--color-accent);
   border: var(--border-thick);
-  top: 10%;
-  left: 15%;
+  top: 15%;
+  left: 12%;
   animation: float 6s ease-in-out infinite;
 }
 
@@ -117,8 +163,8 @@
   background: var(--color-pink);
   border: var(--border-thick);
   border-radius: 50%;
-  top: 20%;
-  right: 20%;
+  top: 18%;
+  right: 15%;
   animation: float 5s ease-in-out infinite reverse;
 }
 
@@ -129,7 +175,7 @@
   background: var(--color-cyan);
   border: var(--border-thick);
   bottom: 15%;
-  left: 25%;
+  right: 18%;
   transform: rotate(45deg);
   animation: float 7s ease-in-out infinite 1s;
 }
@@ -172,11 +218,17 @@
 /* Responsive */
 @media (max-width: 768px) {
   .title {
-    font-size: 2.5rem;
+    font-size: 1.75rem;
   }
 
-  .heroContent {
-    padding: var(--space-xl);
+  .actionCards {
+    grid-template-columns: 1fr;
+  }
+
+  .footerLinks {
+    flex-direction: column;
+    gap: var(--space-md);
+    align-items: center;
   }
 
   .decoShape1,

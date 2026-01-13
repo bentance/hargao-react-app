@@ -1,0 +1,139 @@
+.main {
+    min-height: 100vh;
+    background: var(--color-bg);
+    padding: var(--space-2xl);
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.backButton {
+    display: inline-block;
+    margin-bottom: var(--space-xl);
+    color: var(--color-text);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.backButton:hover {
+    text-decoration: underline;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: var(--space-2xl);
+}
+
+.header h1 {
+    font-size: 2.5rem;
+    margin-bottom: var(--space-sm);
+}
+
+.header p {
+    color: #666;
+    font-size: 1.125rem;
+}
+
+.loading,
+.empty {
+    text-align: center;
+    padding: var(--space-2xl);
+    color: #666;
+}
+
+.createBtn {
+    display: inline-block;
+    margin-top: var(--space-lg);
+    padding: var(--space-md) var(--space-xl);
+    background: var(--color-primary);
+    color: white;
+    border: 3px solid var(--color-border);
+    text-decoration: none;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.createBtn:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 4px 4px 0 var(--color-border);
+    text-decoration: none;
+}
+
+/* Gallery Grid */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--space-xl);
+}
+
+.galleryCard {
+    background: var(--color-surface);
+    border: 3px solid var(--color-border);
+    overflow: hidden;
+    transition: all 0.15s ease;
+    cursor: pointer;
+}
+
+.galleryCard:hover {
+    transform: translate(-4px, -4px);
+    box-shadow: 6px 6px 0 var(--color-border);
+}
+
+.thumbnail {
+    aspect-ratio: 16/9;
+    background: var(--color-bg);
+    overflow: hidden;
+}
+
+.thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.noImage {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    color: #ccc;
+}
+
+.cardContent {
+    padding: var(--space-lg);
+}
+
+.cardContent h3 {
+    font-size: 1.25rem;
+    margin-bottom: var(--space-sm);
+    text-transform: none;
+}
+
+.owner {
+    color: var(--color-primary);
+    font-size: 0.875rem;
+    margin-bottom: var(--space-sm);
+}
+
+.views {
+    color: #999;
+    font-size: 0.75rem;
+}
+
+@media (max-width: 768px) {
+    .main {
+        padding: var(--space-lg);
+    }
+
+    .header h1 {
+        font-size: 1.75rem;
+    }
+
+    .grid {
+        grid-template-columns: 1fr;
+    }
+}

@@ -1,0 +1,121 @@
+.main {
+    min-height: 100vh;
+    background: var(--color-bg);
+    padding: var(--space-2xl);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.container {
+    width: 100%;
+    max-width: 450px;
+}
+
+.backButton {
+    display: inline-block;
+    margin-bottom: var(--space-xl);
+    color: var(--color-text);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.backButton:hover {
+    text-decoration: underline;
+}
+
+.formCard {
+    background: var(--color-surface);
+    border: 3px solid var(--color-border);
+    box-shadow: 6px 6px 0 var(--color-border);
+    padding: var(--space-2xl);
+}
+
+.header {
+    text-align: center;
+    margin-bottom: var(--space-xl);
+}
+
+.header h1 {
+    font-size: 2rem;
+    margin-bottom: var(--space-sm);
+}
+
+.header p {
+    color: #666;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+}
+
+.formGroup {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.formGroup label {
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.875rem;
+}
+
+.error {
+    color: var(--color-error);
+    font-weight: 600;
+    text-align: center;
+    padding: var(--space-md);
+    background: rgba(231, 76, 60, 0.1);
+    border: 2px solid var(--color-error);
+}
+
+.submitBtn {
+    padding: var(--space-lg);
+    background: var(--color-primary);
+    color: white;
+    border: 3px solid var(--color-border);
+    box-shadow: 4px 4px 0 var(--color-border);
+    font-weight: 700;
+    font-size: 1rem;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.submitBtn:hover:not(:disabled) {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 var(--color-border);
+}
+
+.submitBtn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.footer {
+    margin-top: var(--space-xl);
+    padding-top: var(--space-xl);
+    border-top: 2px dashed var(--color-border);
+    text-align: center;
+}
+
+.footer p {
+    color: #666;
+    margin-bottom: var(--space-sm);
+}
+
+.createLink {
+    color: var(--color-primary);
+    font-weight: 600;
+}
+
+@media (max-width: 768px) {
+    .main {
+        padding: var(--space-lg);
+        align-items: flex-start;
+        padding-top: var(--space-2xl);
+    }
+}
