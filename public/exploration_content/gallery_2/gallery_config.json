@@ -1,0 +1,26 @@
+{
+    "name": "Gallery 2",
+    "slug": "gallery-2",
+    "description": "My Photo Dump",
+    "environment": {
+        "level": 1,
+        "character": 2,
+        "uiTheme": 4
+    },
+    "audio": {
+        "enableFootsteps": true,
+        "footstepsVolume": 4
+    },
+    "artist": {
+        "displayName": "Gallery 4 Artist",
+        "bio": "My Photo Dump",
+        "photoURL": null,
+        "links": {
+            "website": null,
+            "instagram": null,
+            "twitter": null,
+            "youtube": null
+        }
+    },
+    "paintings": []
+}

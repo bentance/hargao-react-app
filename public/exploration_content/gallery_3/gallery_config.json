@@ -1,0 +1,75 @@
+{
+    "name": "Hargao Gallery 3",
+    "slug": "gallery-3",
+    "description": "More Paintings",
+    "environment": {
+        "level": 4,
+        "character": 1,
+        "uiTheme": 4
+    },
+    "audio": {
+        "enableFootsteps": true,
+        "footstepsVolume": 4
+    },
+    "artist": {
+        "displayName": "Hargao Gallery 3",
+        "bio": "More Paintings",
+        "photoURL": null,
+        "links": {
+            "website": "gallery3.com",
+            "instagram": "@hargao_studio",
+            "twitter": null,
+            "youtube": null
+        }
+    },
+    "paintings": [
+        {
+            "id": 1,
+            "title": "Woman before an aquarium",
+            "description": "",
+            "imageUrl": ""
+        },
+        {
+            "id": 2,
+            "title": "A Sunday Afternoon on the Island of La Grande Jatte",
+            "description": "by Georges Seurat",
+            "imageUrl": ""
+        },
+        {
+            "id": 3,
+            "title": "Paris Street; Rainy Day",
+            "description": "by Gustave Caillebotte",
+            "imageUrl": ""
+        },
+        {
+            "id": 4,
+            "title": "The Fighting Temeraire",
+            "description": "by JMW Turner",
+            "imageUrl": ""
+        },
+        {
+            "id": 5,
+            "title": "The Basket of Apples",
+            "description": "by Paul Cézanne",
+            "imageUrl": ""
+        },
+        {
+            "id": 6,
+            "title": "The Battle of Adowa",
+            "description": "",
+            "imageUrl": ""
+        },
+        {
+            "id": 7,
+            "title": "The Court of Gayumars",
+            "description": "",
+            "imageUrl": ""
+        },
+        {
+            "id": 8,
+            "title": "Tiger and Magpie",
+            "description": "",
+            "imageUrl": ""
+        }
+    ]
+}

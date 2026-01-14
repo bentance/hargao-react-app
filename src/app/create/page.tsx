@@ -257,11 +257,19 @@ export default function CreatePage() {
                 }
             );
 
-            // 2. Upload profile image if provided
+            // 2. Upload profile image if provided and update user document
             let profileURL = null;
             if (formData.profileImage) {
                 console.log('📷 Uploading profile image...');
                 profileURL = await uploadProfileImage(user.uid, formData.profileImage);
+
+                // Update user document with photoURL
+                const { updateDoc, doc } = await import('firebase/firestore');
+                const { db } = await import('@/lib/firebase');
+                await updateDoc(doc(db, 'users', user.uid), {
+                    photoURL: profileURL
+                });
+                console.log(' Profile image URL saved to user document');
             }
 
             // 3. Create the gallery with paintings
@@ -804,6 +812,22 @@ export default function CreatePage() {
                     </div>
                 </form>
             </div>
+
+            {/* Publishing Modal */}
+            {isSubmitting && (
+                <div className={styles.modalOverlay}>
+                    <div className={styles.modal}>
+                        <div className={styles.modalHeader}>
+                            <h2>📤 Publishing Gallery...</h2>
+                        </div>
+                        <div className={styles.modalContent}>
+                            <div className={styles.spinner}></div>
+                            <p>Please wait while we create your gallery</p>
+                            <p className={styles.subText}>This may take a few moments</p>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             {/* Success Modal */}
             {showSuccessModal && (

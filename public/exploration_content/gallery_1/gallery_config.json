@@ -1,0 +1,87 @@
+{
+    "name": "Hargao Gallery 1",
+    "slug": "gallery-1",
+    "description": "Welcome to hargao gallery! This is a sample gallery.",
+    "environment": {
+        "level": 2,
+        "character": 1,
+        "uiTheme": 4
+    },
+    "audio": {
+        "enableFootsteps": true,
+        "footstepsVolume": 4
+    },
+    "artist": {
+        "displayName": "Hargao Gallery 1",
+        "bio": "Welcome to hargao gallery! This is a sample gallery.",
+        "photoURL": null,
+        "links": {
+            "website": "mi.com",
+            "instagram": "@hargao_studio",
+            "twitter": null,
+            "youtube": null
+        }
+    },
+    "paintings": [
+        {
+            "id": 1,
+            "title": "Chinese Painting",
+            "description": "",
+            "imageUrl": ""
+        },
+        {
+            "id": 2,
+            "title": "Saint George and the Dragon",
+            "description": "One of my favourite paintings",
+            "imageUrl": ""
+        },
+        {
+            "id": 3,
+            "title": "Cool Art",
+            "description": "Imaginary Landscape, wish I was there",
+            "imageUrl": ""
+        },
+        {
+            "id": 4,
+            "title": "Astronaut by the swimming pool",
+            "description": "poetic",
+            "imageUrl": ""
+        },
+        {
+            "id": 5,
+            "title": "",
+            "description": "",
+            "imageUrl": ""
+        },
+        {
+            "id": 6,
+            "title": "be happy",
+            "description": "spend some time everyday with the people you love",
+            "imageUrl": ""
+        },
+        {
+            "id": 7,
+            "title": "L'Artisan Moderne",
+            "description": "by Henri de Toulouse-Lautrec",
+            "imageUrl": ""
+        },
+        {
+            "id": 8,
+            "title": "The Bedroom",
+            "description": "by Van Gogh",
+            "imageUrl": ""
+        },
+        {
+            "id": 9,
+            "title": "",
+            "description": "",
+            "imageUrl": ""
+        },
+        {
+            "id": 10,
+            "title": "Under the Wave off Kanagawa",
+            "description": "by Hokusai",
+            "imageUrl": ""
+        }
+    ]
+}

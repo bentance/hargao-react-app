@@ -1,0 +1,33 @@
+{
+    "name": "Hargao Gallery 5",
+    "slug": "gallery-5",
+    "description": "All About Cats",
+    "environment": {
+        "level": 2,
+        "character": 1,
+        "uiTheme": 4
+    },
+    "audio": {
+        "enableFootsteps": true,
+        "footstepsVolume": 4
+    },
+    "artist": {
+        "displayName": "Hargao Gallery 5",
+        "bio": "All About Cats",
+        "photoURL": null,
+        "links": {
+            "website": null,
+            "instagram": null,
+            "twitter": null,
+            "youtube": null
+        }
+    },
+    "paintings": [
+        {
+            "id": 6,
+            "title": "",
+            "description": "by Fat Cat Art",
+            "imageUrl": ""
+        }
+    ]
+}

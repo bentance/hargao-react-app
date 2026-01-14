@@ -1,0 +1,26 @@
+{
+    "name": "Hargao Gallery 4",
+    "slug": "gallery-4",
+    "description": "Thoughts",
+    "environment": {
+        "level": 1,
+        "character": 1,
+        "uiTheme": 4
+    },
+    "audio": {
+        "enableFootsteps": true,
+        "footstepsVolume": 4
+    },
+    "artist": {
+        "displayName": "Hargao Gallery 2",
+        "bio": "Thoughts",
+        "photoURL": null,
+        "links": {
+            "website": "apple.com",
+            "instagram": "@hargao_studio",
+            "twitter": null,
+            "youtube": null
+        }
+    },
+    "paintings": []
+}

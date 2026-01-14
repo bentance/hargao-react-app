@@ -554,3 +554,26 @@
 .closeModalButton:hover {
     color: var(--color-text);
 }
+
+/* Publishing Modal Spinner */
+.spinner {
+    width: 60px;
+    height: 60px;
+    margin: var(--space-xl) auto;
+    border: 6px solid var(--color-border);
+    border-top-color: var(--color-accent);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.subText {
+    font-size: 0.875rem;
+    color: #888;
+    margin-top: var(--space-md);
+}

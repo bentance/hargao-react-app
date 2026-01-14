@@ -28,11 +28,24 @@ Hargao Gallery Creator is a **drag-and-drop gallery builder** that transforms yo
 
 ---
 
+## 🎮 Application Modes
+
+The app has 3 viewing modes (see [MODE_CONFIG.md](./MODE_CONFIG.md) for details):
+
+1. **Default Mode** - Single gallery view (online from Firebase)
+2. **Explore Mode** - Browse local demo galleries with navigation arrows
+3. **Admin Mode** - Development/testing with extra controls
+
+**Navigation Arrows:** Appear automatically in Explore mode at the bottom center of the screen!
+
+---
+
 ## 🚀 Getting Started
 
 ### Prerequisites
 - Node.js 18+ installed
 - npm, yarn, pnpm, or bun
+- Firebase project (for online galleries)
 
 ### Installation
 
@@ -43,6 +56,10 @@ cd gallery-creator
 
 # Install dependencies
 npm install
+
+# Set up environment variables
+cp .env.local.example .env.local
+# Add your Firebase config to .env.local
 
 # Start the development server
 npm run dev

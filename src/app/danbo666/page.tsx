@@ -11,6 +11,7 @@ interface UserData {
     username: string;
     email: string;
     displayName: string;
+    photoURL?: string | null;
     tier: string;
     galleriesCount: number;
     createdAt: any;
@@ -255,6 +256,15 @@ export default function AdminPage() {
                                     </button>
                                 </div>
                                 <div className={styles.userInfo}>
+                                    {selectedUser.photoURL && (
+                                        <div className={styles.profileImageContainer}>
+                                            <img
+                                                src={selectedUser.photoURL}
+                                                alt={selectedUser.displayName}
+                                                className={styles.profileImage}
+                                            />
+                                        </div>
+                                    )}
                                     <p><strong>Email:</strong> {selectedUser.email}</p>
                                     <p><strong>Display Name:</strong> {selectedUser.displayName}</p>
                                     <p><strong>Tier:</strong> {selectedUser.tier}</p>
@@ -274,7 +284,17 @@ export default function AdminPage() {
                                                     {gallery.isPublished ? '🟢 Published' : '🟡 Draft'}
                                                 </span>
                                             </div>
-                                            <p>Slug: /{gallery.slug}</p>
+                                            <p>
+                                                <strong>Gallery Link:</strong>{' '}
+                                                <a
+                                                    href={`/@${selectedUser.username}/${gallery.slug}`}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className={styles.galleryLink}
+                                                >
+                                                    /@{selectedUser.username}/{gallery.slug}
+                                                </a>
+                                            </p>
                                             <p>Paintings: {gallery.paintingsCount}</p>
 
                                             {gallery.paintings.length > 0 && (
