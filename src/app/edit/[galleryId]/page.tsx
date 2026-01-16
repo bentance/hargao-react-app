@@ -351,8 +351,8 @@ export default function EditGalleryPage() {
                                 className={`${styles.optionCard} ${selectedEnvironment === env.id ? styles.selected : ''}`}
                                 onClick={() => setSelectedEnvironment(env.id)}
                             >
-                                <img src={env.image} alt={env.name} />
-                                <span>{env.name}</span>
+                                <img src={env.image} alt={env.label} />
+                                <span>{env.label}</span>
                             </div>
                         ))}
                     </div>
@@ -368,8 +368,8 @@ export default function EditGalleryPage() {
                                 className={`${styles.optionCard} ${selectedCharacter === char.id ? styles.selected : ''}`}
                                 onClick={() => setSelectedCharacter(char.id)}
                             >
-                                <img src={char.image} alt={char.name} />
-                                <span>{char.name}</span>
+                                <img src={char.image} alt={char.label} />
+                                <span>{char.label}</span>
                             </div>
                         ))}
                     </div>

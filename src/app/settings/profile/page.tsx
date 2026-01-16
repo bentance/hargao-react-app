@@ -157,7 +157,7 @@ export default function ProfileSettingsPage() {
             <div className={styles.container}>
                 <Link href="/dashboard" className={styles.backBtn}>Back to Dashboard</Link>
 
-                <h1>Profile Settings</h1>
+                <h1 className={styles.pageTitle}>Profile Settings</h1>
 
                 {message.text && (
                     <div className={`${styles.message} ${styles[message.type]}`}>

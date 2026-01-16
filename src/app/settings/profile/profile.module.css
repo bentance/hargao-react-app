@@ -30,7 +30,7 @@
     text-decoration: underline;
 }
 
-h1 {
+.pageTitle {
     margin-bottom: var(--space-xl);
 }
 
