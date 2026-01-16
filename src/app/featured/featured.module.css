@@ -1,0 +1,221 @@
+.main {
+    min-height: 100vh;
+    background: var(--color-bg);
+    padding: var(--space-2xl);
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Header */
+.header {
+    margin-bottom: var(--space-2xl);
+}
+
+.backBtn {
+    display: inline-block;
+    margin-bottom: var(--space-lg);
+    color: var(--color-text);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.backBtn:hover {
+    text-decoration: underline;
+}
+
+.headerContent {
+    text-align: center;
+    padding: var(--space-2xl) 0;
+}
+
+.headerContent h1 {
+    font-size: 2.5rem;
+    margin: 0 0 var(--space-sm) 0;
+}
+
+.headerContent p {
+    color: #666;
+    font-size: 1.125rem;
+}
+
+/* Loading & Empty States */
+.loading {
+    text-align: center;
+    padding: var(--space-2xl);
+    color: #666;
+}
+
+.empty {
+    text-align: center;
+    padding: var(--space-2xl);
+    background: var(--color-surface);
+    border: 3px dashed var(--color-border);
+}
+
+.empty h2 {
+    margin: 0 0 var(--space-md) 0;
+}
+
+.empty p {
+    color: #666;
+    margin-bottom: var(--space-xl);
+}
+
+.exploreBtn {
+    display: inline-block;
+    padding: var(--space-md) var(--space-xl);
+    background: var(--color-primary);
+    color: white;
+    border: 3px solid var(--color-border);
+    text-decoration: none;
+    font-weight: 700;
+    transition: all 0.15s;
+}
+
+.exploreBtn:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 4px 4px 0 var(--color-border);
+}
+
+/* Gallery Grid */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: var(--space-xl);
+}
+
+.galleryCard {
+    background: var(--color-surface);
+    border: 3px solid var(--color-border);
+    text-decoration: none;
+    color: var(--color-text);
+    overflow: hidden;
+    transition: all 0.2s;
+}
+
+.galleryCard:hover {
+    transform: translate(-4px, -4px);
+    box-shadow: 6px 6px 0 var(--color-border);
+}
+
+.thumbnail {
+    position: relative;
+    aspect-ratio: 16/10;
+    background: var(--color-bg);
+    overflow: hidden;
+}
+
+.thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s;
+}
+
+.galleryCard:hover .thumbnail img {
+    transform: scale(1.05);
+}
+
+.noImage {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #999;
+    font-size: 1rem;
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.galleryCard:hover .overlay {
+    opacity: 1;
+}
+
+.viewBtn {
+    padding: var(--space-sm) var(--space-lg);
+    background: var(--color-accent);
+    border: 2px solid var(--color-border);
+    font-weight: 700;
+    font-size: 0.875rem;
+}
+
+/* Card Info */
+.cardInfo {
+    padding: var(--space-lg);
+}
+
+.cardInfo h3 {
+    margin: 0 0 var(--space-md) 0;
+    font-size: 1.25rem;
+}
+
+.artistInfo {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-sm);
+}
+
+.artistAvatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--color-border);
+}
+
+.avatarPlaceholder {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--color-primary);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 700;
+    border: 2px solid var(--color-border);
+}
+
+.artistInfo span {
+    font-weight: 600;
+    color: var(--color-primary);
+}
+
+.paintingCount {
+    margin: 0;
+    color: #666;
+    font-size: 0.875rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .main {
+        padding: var(--space-lg);
+    }
+
+    .headerContent h1 {
+        font-size: 1.75rem;
+    }
+
+    .grid {
+        grid-template-columns: 1fr;
+    }
+}
