@@ -1,32 +1,83 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { signInWithEmailAndPassword, onAuthStateChanged } from 'firebase/auth';
+import { auth } from '@/lib/firebase';
 import styles from './signin.module.css';
 
 export default function SignInPage() {
+    const router = useRouter();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const [isChecking, setIsChecking] = useState(true);
+
+    // Check if already logged in
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            if (user) {
+                router.push('/dashboard');
+            } else {
+                setIsChecking(false);
+            }
+        });
+        return () => unsubscribe();
+    }, [router]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError('');
         setIsLoading(true);
 
-        // TODO: Implement Firebase sign in
-        // For now, show coming soon message
-        setTimeout(() => {
-            setError('Sign in coming soon! For now, create a new gallery.');
+        try {
+            await signInWithEmailAndPassword(auth, email, password);
+            // Redirect to dashboard on success
+            router.push('/dashboard');
+        } catch (err: any) {
+            console.error('Sign in error:', err);
+            // User-friendly error messages
+            switch (err.code) {
+                case 'auth/invalid-email':
+                    setError('Invalid email address');
+                    break;
+                case 'auth/user-not-found':
+                    setError('No account found with this email');
+                    break;
+                case 'auth/wrong-password':
+                    setError('Incorrect password');
+                    break;
+                case 'auth/too-many-requests':
+                    setError('Too many attempts. Please try again later.');
+                    break;
+                case 'auth/invalid-credential':
+                    setError('Invalid email or password');
+                    break;
+                default:
+                    setError('Failed to sign in. Please try again.');
+            }
+        } finally {
             setIsLoading(false);
-        }, 1000);
+        }
     };
+
+    // Show loading while checking auth
+    if (isChecking) {
+        return (
+            <main className={styles.main}>
+                <div className={styles.container}>
+                    <p>Loading...</p>
+                </div>
+            </main>
+        );
+    }
 
     return (
         <main className={styles.main}>
             <div className={styles.container}>
-                <Link href="/" className={styles.backButton}>← Back</Link>
+                <Link href="/" className={styles.backButton}>Back</Link>
 
                 <div className={styles.formCard}>
                     <header className={styles.header}>
@@ -56,7 +107,7 @@ export default function SignInPage() {
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 className="neo-input"
-                                placeholder="••••••••"
+                                placeholder="Your password"
                                 required
                             />
                         </div>

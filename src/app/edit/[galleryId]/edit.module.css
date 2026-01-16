@@ -1,0 +1,406 @@
+.main {
+    min-height: 100vh;
+    background: var(--color-bg);
+    padding: var(--space-2xl);
+}
+
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.loading,
+.errorContainer {
+    text-align: center;
+    padding: var(--space-2xl);
+}
+
+.errorContainer h1 {
+    margin-bottom: var(--space-lg);
+}
+
+.errorContainer p {
+    margin-bottom: var(--space-xl);
+    color: #666;
+}
+
+/* Header */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--space-lg);
+    margin-bottom: var(--space-xl);
+    padding-bottom: var(--space-lg);
+    border-bottom: 3px solid var(--color-border);
+}
+
+.header h1 {
+    margin: 0;
+    flex: 1;
+}
+
+.backBtn {
+    color: var(--color-text);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.backBtn:hover {
+    text-decoration: underline;
+}
+
+.headerActions {
+    display: flex;
+    gap: var(--space-md);
+}
+
+.saveBtn {
+    padding: var(--space-sm) var(--space-xl);
+    background: var(--color-primary);
+    color: white;
+    border: 3px solid var(--color-border);
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.saveBtn:hover:not(:disabled) {
+    transform: translate(-2px, -2px);
+    box-shadow: 4px 4px 0 var(--color-border);
+}
+
+.saveBtn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.deleteGalleryBtn {
+    padding: var(--space-sm) var(--space-lg);
+    background: transparent;
+    color: #c0392b;
+    border: 2px solid #c0392b;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.deleteGalleryBtn:hover {
+    background: #c0392b;
+    color: white;
+}
+
+/* Messages */
+.error {
+    background: #c0392b;
+    color: white;
+    padding: var(--space-md);
+    margin-bottom: var(--space-lg);
+    border-radius: 4px;
+}
+
+.success {
+    background: #27ae60;
+    color: white;
+    padding: var(--space-md);
+    margin-bottom: var(--space-lg);
+    border-radius: 4px;
+}
+
+/* Sections */
+.section {
+    background: var(--color-surface);
+    border: 3px solid var(--color-border);
+    box-shadow: 6px 6px 0 var(--color-border);
+    padding: var(--space-xl);
+    margin-bottom: var(--space-xl);
+}
+
+.section h2 {
+    margin: 0 0 var(--space-lg) 0;
+    font-size: 1.25rem;
+}
+
+.sectionHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-lg);
+}
+
+.sectionHeader h2 {
+    margin: 0;
+}
+
+/* Form */
+.formGroup {
+    margin-bottom: var(--space-lg);
+}
+
+.formGroup label {
+    display: block;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    margin-bottom: var(--space-sm);
+}
+
+.formGroup small {
+    display: block;
+    margin-top: var(--space-sm);
+    color: #666;
+    font-size: 0.75rem;
+}
+
+.checkboxLabel {
+    display: flex !important;
+    align-items: center;
+    gap: var(--space-sm);
+    cursor: pointer;
+    text-transform: none !important;
+    font-size: 1rem !important;
+}
+
+.checkboxLabel input {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+/* Options Grid */
+.optionsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: var(--space-md);
+}
+
+.optionCard {
+    border: 3px solid var(--color-border);
+    cursor: pointer;
+    transition: all 0.15s;
+    overflow: hidden;
+}
+
+.optionCard:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 4px 4px 0 var(--color-border);
+}
+
+.optionCard.selected {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px var(--color-primary);
+}
+
+.optionCard img {
+    width: 100%;
+    aspect-ratio: 16/9;
+    object-fit: cover;
+}
+
+.optionCard span {
+    display: block;
+    padding: var(--space-sm);
+    text-align: center;
+    font-weight: 600;
+    font-size: 0.875rem;
+    background: var(--color-surface);
+}
+
+/* Paintings */
+.fileInput {
+    display: none;
+}
+
+.addBtn {
+    padding: var(--space-sm) var(--space-lg);
+    background: var(--color-accent);
+    border: 2px solid var(--color-border);
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.addBtn:hover {
+    transform: translate(-1px, -1px);
+    box-shadow: 2px 2px 0 var(--color-border);
+}
+
+.paintingsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: var(--space-lg);
+}
+
+.paintingCard {
+    border: 2px solid var(--color-border);
+    background: var(--color-bg);
+}
+
+.paintingImage {
+    position: relative;
+    aspect-ratio: 1;
+    overflow: hidden;
+}
+
+.paintingImage img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.deletePaintingBtn {
+    position: absolute;
+    top: var(--space-sm);
+    right: var(--space-sm);
+    width: 30px;
+    height: 30px;
+    background: #c0392b;
+    color: white;
+    border: 2px solid white;
+    font-weight: 700;
+    cursor: pointer;
+    border-radius: 4px;
+    opacity: 0;
+    transition: opacity 0.15s;
+}
+
+.paintingImage:hover .deletePaintingBtn {
+    opacity: 1;
+}
+
+.deletePaintingBtn:hover {
+    background: #a93226;
+}
+
+.paintingFields {
+    padding: var(--space-sm);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.paintingFields input,
+.paintingFields textarea {
+    font-size: 0.875rem;
+}
+
+/* View Link */
+.viewLink {
+    text-align: center;
+    margin-top: var(--space-xl);
+}
+
+.viewBtn {
+    display: inline-block;
+    padding: var(--space-md) var(--space-2xl);
+    background: var(--color-surface);
+    color: var(--color-text);
+    border: 3px solid var(--color-border);
+    text-decoration: none;
+    font-weight: 700;
+    transition: all 0.15s;
+}
+
+.viewBtn:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 4px 4px 0 var(--color-border);
+}
+
+/* Modals */
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal {
+    background: var(--color-surface);
+    border: 3px solid var(--color-border);
+    box-shadow: 8px 8px 0 var(--color-border);
+    padding: var(--space-xl);
+    max-width: 500px;
+    width: 90%;
+}
+
+.modal h2 {
+    margin: 0 0 var(--space-lg) 0;
+}
+
+.warning {
+    line-height: 1.6;
+    margin-bottom: var(--space-lg);
+}
+
+.warning strong {
+    color: #c0392b;
+}
+
+.modalActions {
+    display: flex;
+    gap: var(--space-md);
+    justify-content: flex-end;
+    margin-top: var(--space-lg);
+}
+
+.cancelBtn {
+    padding: var(--space-sm) var(--space-lg);
+    background: var(--color-surface);
+    border: 2px solid var(--color-border);
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.cancelBtn:hover {
+    background: var(--color-bg);
+}
+
+.confirmDeleteBtn {
+    padding: var(--space-sm) var(--space-lg);
+    background: #c0392b;
+    color: white;
+    border: 2px solid #a93226;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.confirmDeleteBtn:hover {
+    background: #a93226;
+}
+
+.confirmDeleteBtn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .main {
+        padding: var(--space-lg);
+    }
+
+    .header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .headerActions {
+        width: 100%;
+        flex-direction: column;
+    }
+
+    .optionsGrid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .paintingsGrid {
+        grid-template-columns: 1fr;
+    }
+}
