@@ -28,7 +28,7 @@ export default function Home() {
         {/* Footer Links */}
         <nav className={styles.footerLinks}>
           <Link href="/about" className={styles.footerLink}>about</Link>
-          <Link href="/feature" className={styles.footerLink}>feature</Link>
+          <Link href="/featured" className={styles.footerLink}>featured</Link>
           <Link href="/signin" className={styles.footerLink}>sign in</Link>
         </nav>
 

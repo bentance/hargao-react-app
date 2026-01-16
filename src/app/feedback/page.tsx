@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
 import styles from './feedback.module.css';
 
 export default function FeedbackPage() {
@@ -11,17 +13,31 @@ export default function FeedbackPage() {
     const [message, setMessage] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSubmitted, setIsSubmitted] = useState(false);
+    const [error, setError] = useState('');
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsSubmitting(true);
+        setError('');
 
-        // TODO: Send to Firebase or email service
-        // For now, just simulate submission
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        try {
+            // Save feedback to Firebase
+            await addDoc(collection(db, 'feedback'), {
+                name: name.trim() || 'Anonymous',
+                email: email.trim() || null,
+                type,
+                message: message.trim(),
+                createdAt: serverTimestamp(),
+                isRead: false
+            });
 
-        setIsSubmitted(true);
-        setIsSubmitting(false);
+            setIsSubmitted(true);
+        } catch (err: any) {
+            console.error('Error submitting feedback:', err);
+            setError('Failed to submit feedback. Please try again.');
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     if (isSubmitted) {
@@ -29,7 +45,7 @@ export default function FeedbackPage() {
             <main className={styles.main}>
                 <div className={styles.container}>
                     <div className={styles.successCard}>
-                        <h1>🎉 Thank You!</h1>
+                        <h1>Thank You!</h1>
                         <p>Your feedback has been received. We appreciate you taking the time to help us improve!</p>
                         <Link href="/" className={styles.homeBtn}>
                             Back to Home
@@ -43,13 +59,15 @@ export default function FeedbackPage() {
     return (
         <main className={styles.main}>
             <div className={styles.container}>
-                <Link href="/" className={styles.backButton}>← Back</Link>
+                <Link href="/" className={styles.backButton}>Back</Link>
 
                 <div className={styles.formCard}>
                     <header className={styles.header}>
                         <h1>Provide Feedback</h1>
                         <p>Help us make Hargao better</p>
                     </header>
+
+                    {error && <div className={styles.error}>{error}</div>}
 
                     <form onSubmit={handleSubmit} className={styles.form}>
                         <div className={styles.formRow}>
@@ -88,11 +106,7 @@ export default function FeedbackPage() {
                                         className={`${styles.typeBtn} ${type === t ? styles.active : ''}`}
                                         onClick={() => setType(t)}
                                     >
-                                        {t === 'suggestion' && '💡'}
-                                        {t === 'bug' && '🐛'}
-                                        {t === 'feature' && '✨'}
-                                        {t === 'other' && '💬'}
-                                        {' '}{t}
+                                        {t}
                                     </button>
                                 ))}
                             </div>

@@ -170,3 +170,12 @@
         width: 100%;
     }
 }
+
+.error {
+    background: #c0392b;
+    color: white;
+    padding: var(--space-md);
+    border-radius: 4px;
+    margin-bottom: var(--space-md);
+    text-align: center;
+}

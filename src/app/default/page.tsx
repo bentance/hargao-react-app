@@ -16,16 +16,16 @@ const GalleryViewer = dynamic(() => import('@/components/GalleryViewer'), {
             color: 'white',
             fontFamily: 'sans-serif'
         }}>
-            Loading Explore Mode...
+            Loading Demo Gallery...
         </div>
     )
 });
 
-export default function ExploreBabylonPage() {
+export default function DefaultPage() {
     return (
         <main style={{ height: '100vh', width: '100vw', overflow: 'hidden' }}>
             <GalleryViewer
-                mode="explore"
+                mode="default"
                 source="offline"
             />
         </main>

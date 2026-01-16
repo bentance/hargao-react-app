@@ -6,7 +6,7 @@ Hargao is a web application that allows artists, photographers, and creators to 
 
 ---
 
-## 🎨 What Does This App Do?
+## What Does This App Do?
 
 Hargao Gallery Creator is a **drag-and-drop gallery builder** that transforms your 2D artwork into an immersive 3D walking experience. Here's what you can do:
 
@@ -28,19 +28,60 @@ Hargao Gallery Creator is a **drag-and-drop gallery builder** that transforms yo
 
 ---
 
-## 🎮 Application Modes
+## Application Routes
 
-The app has 3 viewing modes (see [MODE_CONFIG.md](./MODE_CONFIG.md) for details):
+| Route | Description |
+|-------|-------------|
+| `/` | Landing page with navigation to Create, Explore, Featured |
+| `/create` | Gallery creation form - build your own gallery |
+| `/explore` | Babylon.js 3D viewer in explore mode (offline galleries) |
+| `/featured` | Babylon.js 3D viewer showcasing featured galleries |
+| `/default` | Babylon.js 3D viewer - single local demo gallery |
+| `/feedback` | Submit feedback to help improve the platform |
+| `/signin` | User sign-in page |
+| `/about` | About page |
+| `/terms` | Terms & Conditions |
+| `/@username/gallery-slug` | View a specific user's published gallery |
+| `/danbo666` | Admin dashboard (password protected) |
 
-1. **Default Mode** - Single gallery view (online from Firebase)
-2. **Explore Mode** - Browse local demo galleries with navigation arrows
+---
+
+## Application Modes
+
+The Babylon.js viewer has 3 viewing modes:
+
+1. **Default Mode** - Single gallery view (for `/@username/slug` routes)
+2. **Explore Mode** - Browse local demo galleries with navigation arrows (for `/explore` and `/featured`)
 3. **Admin Mode** - Development/testing with extra controls
 
 **Navigation Arrows:** Appear automatically in Explore mode at the bottom center of the screen!
 
 ---
 
-## 🚀 Getting Started
+## Admin Dashboard (`/danbo666`)
+
+The admin dashboard provides tools for managing the platform:
+
+### Users Tab
+- View all registered users
+- See user details (email, username, tier, galleries count)
+- View user galleries with paintings thumbnails
+- Toggle "Featured" status on galleries
+- Delete users (with password confirmation)
+
+### Feedback Tab
+- View all user-submitted feedback
+- See feedback type (suggestion, bug, feature, other)
+- View submission date and user contact info
+
+### Featured Tab
+- View all currently featured galleries
+- Quick links to visit each gallery
+- Remove galleries from featured list
+
+---
+
+## Getting Started
 
 ### Prerequisites
 - Node.js 18+ installed
@@ -69,134 +110,145 @@ Open [http://localhost:3000](http://localhost:3000) to see the app.
 
 ---
 
-## 📁 Project Structure
+## Environment Variables
+
+Required environment variables in `.env.local`:
+
+```env
+NEXT_PUBLIC_FIREBASE_API_KEY=your_api_key
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=your_project_id
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your_project.appspot.com
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
+NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
+NEXT_PUBLIC_ADMIN_PASSWORD=your_admin_password
+```
+
+---
+
+## Firebase Collections
+
+### `users`
+User profile and account data.
+
+### `galleries`
+Gallery configurations, paintings, and settings.
+- `isFeatured: boolean` - Admin-curated featured galleries
+- `isPublished: boolean` - Public visibility
+
+### `feedback`
+User feedback submissions.
+- `name`, `email`, `type`, `message`, `createdAt`, `isRead`
+
+### `usernames`
+Username reservation mapping.
+
+---
+
+## Firebase Security Rules
+
+Recommended Firestore rules:
+
+```javascript
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    match /users/{userId} {
+      allow read: if true;
+      allow write: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    match /galleries/{galleryId} {
+      allow read: if true;
+      allow create: if request.auth != null;
+      allow update: if request.auth != null 
+                    || request.resource.data.diff(resource.data).affectedKeys().hasOnly(['isFeatured']);
+      allow delete: if request.auth != null && request.auth.uid == resource.data.ownerId;
+    }
+    
+    match /feedback/{feedbackId} {
+      allow create: if true;
+      allow read: if true;
+    }
+    
+    match /usernames/{username} {
+      allow read: if true;
+      allow create: if request.auth != null;
+    }
+  }
+}
+```
+
+---
+
+## Project Structure
 
 ```
 gallery-creator/
 ├── public/
-│   └── images/
-│       ├── environments/          # Environment preview thumbnails
-│       │   ├── brutalist.jpg
-│       │   ├── classical.jpg
-│       │   ├── salt-flat.jpg
-│       │   └── color-scream.jpg
-│       └── characters/            # Character preview thumbnails
-│           ├── female.jpg
-│           └── mannequin.jpg
+│   ├── images/
+│   │   ├── environments/          # Environment preview thumbnails
+│   │   └── characters/            # Character preview thumbnails
+│   ├── ui/
+│   │   ├── Desktop_View_Instructions_v0.jpg  # Desktop loading screen
+│   │   └── Mobile_View_Instructions_v0.jpg   # Mobile loading screen
+│   └── exploration_content/       # Offline demo galleries
+│       ├── gallery_1/
+│       ├── gallery_2/
+│       └── ...
 ├── src/
 │   ├── app/
 │   │   ├── page.tsx              # Landing page
 │   │   ├── create/               # Gallery creation form
-│   │   │   ├── page.tsx
-│   │   │   └── create.module.css
-│   │   └── terms/                # Terms & Conditions page
-│   │       ├── page.tsx
-│   │       └── terms.module.css
+│   │   ├── explore/              # Babylon.js explore mode
+│   │   ├── featured/             # Featured galleries viewer
+│   │   ├── default/              # Single demo gallery
+│   │   ├── feedback/             # Feedback form
+│   │   ├── danbo666/             # Admin dashboard
+│   │   ├── signin/               # Sign in page
+│   │   └── [username]/[slug]/    # Dynamic gallery routes
+│   ├── babylon/                  # Babylon.js 3D engine
+│   │   ├── app.ts               # Main Babylon app
+│   │   ├── config.ts            # Game configuration
+│   │   └── ...
+│   ├── components/
+│   │   └── GalleryViewer.tsx    # React wrapper for Babylon.js
 │   ├── types/
-│   │   └── firebase.ts           # 🔥 Firebase data interfaces
-│   ├── config.ts                 # 🔧 Main configuration file
-│   └── globals.css               # Global styles
+│   │   └── firebase.ts          # TypeScript interfaces
+│   └── lib/
+│       └── firebase.ts          # Firebase initialization
 └── README.md
 ```
 
 ---
 
-## ⚙️ Configuration
+## Tech Stack
 
-All app settings are managed in `src/config.ts`:
-
-### Brand Configuration (`BRAND_CONFIG`)
-```typescript
-{
-    name: "Hargao",                    // App name
-    tagline: "Create Your Immersive Art Gallery",
-    logo: null,                        // Path to logo image or null
-    company: "Your Company Name",
-    website: "https://example.com",
-    colors: { ... },                   // Theme colors
-    social: { ... },                   // Social media links
-}
-```
-
-### Gallery Options (`GALLERY_OPTIONS`)
-```typescript
-{
-    environments: [...],               // Available 3D environments (1-4)
-    characters: [...],                 // Available avatar characters (1-2 in form, 0-2 in Babylon)
-    uiThemes: [...],                   // UI themes (0-4)
-    defaultUI: {
-        environment: 1,                // 1=Brutalist, 2=Museum, 3=Salt, 4=Color
-        character: 1,                  // 0=Bear, 1=Female, 2=Mannequin
-        uiTheme: 4,                    // 0=Dark, 1=Light, 2=Neon, 3=Museum, 4=macOS
-    },
-    defaultAudio: {
-        enableFootsteps: true,
-        footstepsVolume: 4,            // 1-10
-        backgroundMusicVolume: 5,      // 1-10
-    },
-    defaultBranding: {
-        showWatermark: true,
-        customWatermark: null,
-    },
-    defaultAccess: {
-        isPasswordProtected: false,
-    },
-    defaultTier: "free",               // "free" | "premium" | "admin"
-    maxPaintings: 10,
-    minPaintings: 1,
-}
-```
-
-### Firebase Interfaces (`src/types/firebase.ts`)
-
-The app includes TypeScript interfaces that match the Babylon.js app's data structure:
-
-- **`User`** - User account and profile data
-- **`Gallery`** - Gallery settings, environment, audio, and paintings
-- **`Painting`** - Individual painting metadata and image URL
-- **`DEFAULT_USER`** - Default values for new users
-- **`DEFAULT_GALLERY`** - Default values for new galleries
-- **`TIER_LIMITS`** - Feature limits per subscription tier
-
-
----
-
-## 🖼️ Adding Environment & Character Images
-
-Replace the placeholder images in `public/images/`:
-
-| File Path | Recommended Size | Description |
-|-----------|------------------|-------------|
-| `/images/environments/brutalist.jpg` | 320x200px | Brutalist Art Gallery preview |
-| `/images/environments/classical.jpg` | 320x200px | Classical Museum preview |
-| `/images/environments/salt-flat.jpg` | 320x200px | Salt Flat preview |
-| `/images/environments/color-scream.jpg` | 320x200px | Color Scream preview |
-| `/images/characters/female.jpg` | 320x200px | Female character preview |
-| `/images/characters/mannequin.jpg` | 320x200px | Mannequin character preview |
-
----
-
-## 📄 Pages
-
-| Route | Description |
-|-------|-------------|
-| `/` | Landing page |
-| `/create` | Gallery creation form |
-| `/terms` | Terms & Conditions |
-
----
-
-## 🛠️ Tech Stack
-
-- **Framework:** Next.js 14 (App Router)
+- **Framework:** Next.js 16 (App Router)
+- **3D Engine:** Babylon.js
 - **Language:** TypeScript
 - **Styling:** CSS Modules + Global CSS (Neobrutalism design)
+- **Backend:** Firebase (Auth, Firestore, Storage)
 - **State:** React useState
-- **Future:** Firebase integration for data persistence
 
 ---
 
-## 📋 Form Fields
+## Loading Screen
+
+The Babylon.js viewer includes a custom loading screen with:
+- Device-specific instruction images (desktop/mobile)
+- "hargao studio" branding
+- Animated spinner
+- Automatic fade-out when loaded
+
+Loading screen images location:
+- Desktop: `/public/ui/Desktop_View_Instructions_v0.jpg`
+- Mobile: `/public/ui/Mobile_View_Instructions_v0.jpg`
+
+---
+
+## Form Fields
 
 ### Required Fields (marked with *)
 - Email
@@ -217,29 +269,16 @@ Replace the placeholder images in `public/images/`:
 
 ---
 
-## 🚧 Roadmap / Future Features
-
-- [ ] Firebase Authentication
-- [ ] Firebase Firestore for gallery storage
-- [ ] Firebase Storage for image uploads
-- [ ] Live 3D gallery preview
-- [ ] UI Theme customization
-- [ ] Footstep sounds toggle
-- [ ] Watermark options
-- [ ] Gallery analytics
-
----
-
-## 📝 License
+## License
 
 [Your License Here]
 
 ---
 
-## 🤝 Contributing
+## Contributing
 
 Contributions are welcome! Please read our contributing guidelines before submitting PRs.
 
 ---
 
-**Built with ❤️ by Hargao Studio**
+**Built with love by Hargao Studio**

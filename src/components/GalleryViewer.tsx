@@ -4,7 +4,7 @@ import { useEffect, useRef } from 'react';
 import styles from './GalleryViewer.module.css';
 
 interface GalleryViewerProps {
-    galleryData: {
+    galleryData?: {
         environment: {
             level: number;
             character: number;
@@ -33,9 +33,16 @@ interface GalleryViewerProps {
             instagram: string | null;
         };
     };
+    mode?: 'default' | 'explore' | 'admin';
+    source?: 'online' | 'offline';
 }
 
-export default function GalleryViewer({ galleryData, userData }: GalleryViewerProps) {
+export default function GalleryViewer({
+    galleryData,
+    userData,
+    mode = 'default',
+    source = 'online'
+}: GalleryViewerProps) {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const appRef = useRef<any>(null);
     const isInitialized = useRef(false);
@@ -43,8 +50,9 @@ export default function GalleryViewer({ galleryData, userData }: GalleryViewerPr
 
     // Only initialize once when data is available
     useEffect(() => {
-        // Wait for gallery data to be available
-        if (!galleryData || !canvasRef.current) return;
+        // Wait for canvas; for online mode, also wait for gallery data
+        if (!canvasRef.current) return;
+        if (source === 'online' && !galleryData) return;
 
         // Track if this effect instance is still mounted
         let isMounted = true;
@@ -64,16 +72,18 @@ export default function GalleryViewer({ galleryData, userData }: GalleryViewerPr
                 if (!isMounted) return;
 
                 console.log('Initializing Babylon.js gallery viewer...');
-                console.log('Gallery data:', galleryData);
+                console.log('Mode:', mode, 'Source:', source);
 
-                // Set online mode since we're getting data from Firebase
-                setAppMode('online');
+                // Set application mode (online/offline)
+                setAppMode(source);
 
-                // Set user type to "default" for single gallery viewing (not explore mode)
-                setUserType('default');
+                // Set user type (default/explore/admin)
+                setUserType(mode);
 
-                // Set gallery data before initializing
-                setGalleryData(galleryData);
+                // Set gallery data if in online mode
+                if (source === 'online' && galleryData) {
+                    setGalleryData(galleryData);
+                }
 
                 // Set user/artist data if provided
                 if (userData) {
@@ -107,14 +117,27 @@ export default function GalleryViewer({ galleryData, userData }: GalleryViewerPr
             }
             isInitialized.current = false;
         };
-    }, [galleryData, userData]); // Re-run when data changes
+    }, [galleryData, userData, mode, source]); // Re-run when props change
+
+    // Detect if mobile
+    const isMobile = typeof window !== 'undefined' && /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
     return (
         <div className={styles.container}>
             {/* Loading screen - will be hidden by Babylon after load */}
             <div id="loadingScreen" className={styles.loadingScreen}>
                 <div className={styles.loadingContent}>
-                    <h2>Loading Gallery...</h2>
+                    {/* Instruction Image */}
+                    <img
+                        src={isMobile ? "/ui/Mobile_View_Instructions_v0.jpg" : "/ui/Desktop_View_Instructions_v0.jpg"}
+                        alt="Controls Instructions"
+                        className={styles.instructionImage}
+                    />
+                    {/* Loading Text */}
+                    <div className={styles.loadingText}>
+                        <span className={styles.studioName}>hargao</span>
+                        <span className={styles.loadingLabel}>loading</span>
+                    </div>
                     <div className={styles.spinner}></div>
                 </div>
             </div>

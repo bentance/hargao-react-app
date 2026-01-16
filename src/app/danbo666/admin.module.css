@@ -450,3 +450,182 @@
     color: #fff;
     text-decoration: underline;
 }
+
+/* Status Badges & Featured Controls */
+.statusBadges {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.featuredLabel {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    color: #ffd700;
+    cursor: pointer;
+    user-select: none;
+}
+
+.featuredLabel input {
+    cursor: pointer;
+}
+
+.saveButton {
+    padding: 0.25rem 0.75rem;
+    background: #3498db;
+    border: none;
+    border-radius: 4px;
+    color: white;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.saveButton:hover {
+    background: #2980b9;
+}
+
+/* Header Right */
+.headerRight {
+    display: flex;
+    gap: 1.5rem;
+}
+
+/* Tab Navigation */
+.tabNav {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #333;
+}
+
+.tabBtn {
+    padding: 0.75rem 1.5rem;
+    background: transparent;
+    border: 2px solid #444;
+    color: #888;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.tabBtn:hover {
+    border-color: #666;
+    color: #fff;
+}
+
+.activeTab {
+    background: #78aaa6;
+    border-color: #78aaa6;
+    color: #1a1a2e;
+}
+
+/* Feedback Section */
+.feedbackSection {
+    background: #1e2532;
+    padding: 1.5rem;
+    border-radius: 8px;
+}
+
+.feedbackSection h2 {
+    margin-bottom: 1.5rem;
+    color: #fff;
+}
+
+.feedbackList {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.feedbackCard {
+    background: #252d3a;
+    padding: 1rem;
+    border-radius: 6px;
+    border-left: 4px solid #78aaa6;
+}
+
+.feedbackHeader {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.75rem;
+}
+
+.feedbackType {
+    background: #3498db;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: white;
+}
+
+.feedbackDate {
+    color: #888;
+    font-size: 0.8rem;
+}
+
+.feedbackMessage {
+    color: #e0e0e0;
+    line-height: 1.5;
+    margin-bottom: 0.75rem;
+}
+
+.feedbackMeta {
+    display: flex;
+    gap: 1.5rem;
+    font-size: 0.8rem;
+    color: #888;
+}
+
+/* Featured Galleries Tab */
+.featuredList {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.featuredCard {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #252d3a;
+    padding: 1rem;
+    border-radius: 6px;
+    border-left: 4px solid #ffd700;
+}
+
+.featuredInfo h4 {
+    margin: 0 0 0.5rem 0;
+    color: #fff;
+}
+
+.featuredInfo p {
+    margin: 0 0 0.5rem 0;
+}
+
+.paintingCount {
+    font-size: 0.8rem;
+    color: #888;
+}
+
+.unfeatureBtn {
+    padding: 0.5rem 1rem;
+    background: #e74c3c;
+    border: none;
+    border-radius: 4px;
+    color: white;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.unfeatureBtn:hover {
+    background: #c0392b;
+}
