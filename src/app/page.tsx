@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import styles from './page.module.css';
 
 export default function Home() {
@@ -9,7 +10,20 @@ export default function Home() {
         <header className={styles.header}>
           <p className={styles.greeting}>Hello beautiful</p>
           <h1 className={styles.title}>Welcome to HARGAO</h1>
+          <p className={styles.subtitle}>Build your immersive virtual art exhibition</p>
         </header>
+
+        {/* Hero GIF */}
+        <div className={styles.heroGifContainer}>
+          <Image
+            src="/gif_for_homepage_v0.gif"
+            alt="HARGAO Gallery Preview"
+            className={styles.heroGif}
+            width={400}
+            height={300}
+            unoptimized
+          />
+        </div>
 
         {/* Main Actions - Two cards */}
         <div className={styles.actionCards}>

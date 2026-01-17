@@ -350,7 +350,7 @@ export default function CreatePage() {
                     {/* Hero GIF */}
                     <div className={styles.heroGifContainer}>
                         <img
-                            src="/gif_for_create_image_v0.gif"
+                            src="/gif_for_create_image_v1.gif"
                             alt="Gallery preview"
                             className={styles.heroGif}
                         />

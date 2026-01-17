@@ -41,6 +41,27 @@
   text-transform: none;
 }
 
+.subtitle {
+  font-size: 1.1rem;
+  color: var(--color-text);
+  opacity: 0.85;
+  margin-top: var(--space-sm);
+}
+
+/* Hero GIF */
+.heroGifContainer {
+  display: flex;
+  justify-content: center;
+  margin-bottom: var(--space-xl);
+}
+
+.heroGif {
+  max-width: 100%;
+  height: auto;
+  border: 3px solid var(--color-border);
+  box-shadow: 6px 6px 0 var(--color-border);
+}
+
 /* Action Cards */
 .actionCards {
   display: grid;
