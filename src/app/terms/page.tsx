@@ -7,38 +7,38 @@ export default function TermsPage() {
         <main className={styles.main}>
             <div className="page-container">
                 <header className="page-header">
-                    <h1>📜 Terms & Conditions</h1>
+                    <h1>📜 Hargao Terms of Service</h1>
                     <p>Please read our terms carefully</p>
                 </header>
 
                 <section className="step-card">
                     <div className="step-content">
                         <div className={styles.termsContent}>
-                            <p className={styles.lastUpdated}>Last Updated: January 2026</p>
+                            <p className={styles.lastUpdated}>Effective Date: January 17, 2026</p>
+                            <p className={styles.intro}>
+                                Welcome to Hargao. By using our platform to create, view, or share 3D virtual galleries, you agree to be bound by the following terms.
+                            </p>
 
                             {/* Section 1 */}
                             <div className={styles.section}>
                                 <h2 className={styles.sectionTitle}>
                                     <span className={styles.sectionNumber}>1</span>
-                                    Intellectual Property & Content License
+                                    Ownership and Intellectual Property (IP)
                                 </h2>
-                                <p className={styles.intro}>
-                                    By using Hargao to create 3D portfolios, you agree to the following regarding your creative work:
-                                </p>
 
                                 <div className={styles.term}>
-                                    <h3 className={styles.termTitle}>Ownership</h3>
-                                    <p>You retain full ownership of the original 2D assets (images, illustrations, photographs) that you upload to the Hargao platform.</p>
+                                    <h3 className={styles.termTitle}>Your Content</h3>
+                                    <p>You retain 100% ownership of all artwork, images, and text you upload to Hargao. We do not claim any copyright over your creations.</p>
                                 </div>
 
                                 <div className={styles.term}>
-                                    <h3 className={styles.termTitle}>The Hargao License</h3>
-                                    <p>To display your work in a 3D environment, you grant Hargao a worldwide, non-exclusive, royalty-free license to host, store, and render your content within our architectural templates. This includes the right to generate thumbnails and previews for your portfolio's unique URL.</p>
+                                    <h3 className={styles.termTitle}>Limited License</h3>
+                                    <p>To operate the service, you grant Hargao a worldwide, non-exclusive, royalty-free license to host, store, display, and reproduce your content solely for the purpose of displaying your gallery and promoting your work within our "Exploration Mode."</p>
                                 </div>
 
                                 <div className={styles.term}>
-                                    <h3 className={styles.termTitle}>Template Ownership</h3>
-                                    <p>While you own your art, Hargao owns the 3D templates, architectural assets, lighting systems, and code used to generate the gallery. You may not export the 3D environment itself for use in other software without permission.</p>
+                                    <h3 className={styles.termTitle}>Platform Rights</h3>
+                                    <p>All 3D assets, gallery environments, code, and interface designs provided by Hargao are the exclusive property of Hargao. You may not extract or reverse-engineer our 3D environments for use outside the platform.</p>
                                 </div>
                             </div>
 
@@ -46,25 +46,17 @@ export default function TermsPage() {
                             <div className={styles.section}>
                                 <h2 className={styles.sectionTitle}>
                                     <span className={styles.sectionNumber}>2</span>
-                                    Data Usage & Privacy
+                                    Data Storage & Management
                                 </h2>
-                                <p className={styles.intro}>
-                                    Hargao is designed to be a "drag-and-drop" experience. To make this possible:
-                                </p>
 
                                 <div className={styles.term}>
-                                    <h3 className={styles.termTitle}>Behavioral Data</h3>
-                                    <p>We collect data on how you interact with our 3D editor (e.g., which themes are most popular) to improve our templates.</p>
+                                    <h3 className={styles.termTitle}>Storage</h3>
+                                    <p>We provide digital storage for your uploaded artwork. While we take reasonable measures to secure your data, Hargao is not a backup service. You are responsible for maintaining original copies of your work.</p>
                                 </div>
 
                                 <div className={styles.term}>
-                                    <h3 className={styles.termTitle}>Public Access</h3>
-                                    <p>By clicking "Publish," you acknowledge that your 3D gallery and the assets within it are accessible to anyone with your unique URL.</p>
-                                </div>
-
-                                <div className={styles.term}>
-                                    <h3 className={styles.termTitle}>Asset Storage</h3>
-                                    <p>We store your uploaded images on our cloud servers. If you delete your account, we will remove your assets from our active database, though cached versions may persist for a limited time.</p>
+                                    <h3 className={styles.termTitle}>Account Inactivity</h3>
+                                    <p>For users on a Free Tier, Hargao reserves the right to remove galleries or data from accounts that have been inactive for more than 12 consecutive months. We will provide 30 days' notice via email before any data removal.</p>
                                 </div>
                             </div>
 
@@ -72,35 +64,17 @@ export default function TermsPage() {
                             <div className={styles.section}>
                                 <h2 className={styles.sectionTitle}>
                                     <span className={styles.sectionNumber}>3</span>
-                                    Prohibited Content & Community Guidelines
+                                    Analytics and User Activity
                                 </h2>
-                                <p className={styles.intro}>
-                                    To maintain the "epic" and professional feel of Hargao, we strictly prohibit the following. Hargao reserves the right to remove any content or terminate accounts that display:
-                                </p>
 
                                 <div className={styles.term}>
-                                    <h3 className={styles.termTitle}>Illegal & Harmful Content</h3>
-                                    <p>Anything that promotes illegal acts, violence, or self-harm.</p>
+                                    <h3 className={styles.termTitle}>Usage Tracking</h3>
+                                    <p>To improve the 3D experience, we collect data on how visitors interact with galleries (e.g., movement patterns, artwork views, and session duration).</p>
                                 </div>
 
                                 <div className={styles.term}>
-                                    <h3 className={styles.termTitle}>Hate Speech</h3>
-                                    <p>Content that promotes discrimination or disparages individuals or groups based on race, religion, disability, age, nationality, veteran status, sexual orientation, gender, or gender identity.</p>
-                                </div>
-
-                                <div className={styles.term}>
-                                    <h3 className={styles.termTitle}>Sexual & Explicit Content</h3>
-                                    <p>While we support artistic expression, Hargao is a professional portfolio tool. We prohibit the posting of non-consensual sexual content, real-world pornography, or imagery depicting sexual violence.</p>
-                                </div>
-
-                                <div className={styles.term}>
-                                    <h3 className={styles.termTitle}>Harassment</h3>
-                                    <p>Any content intended to bully, stalk, or harass other creators or individuals.</p>
-                                </div>
-
-                                <div className={styles.term}>
-                                    <h3 className={styles.termTitle}>Deceptive Content</h3>
-                                    <p>You may not upload work that is not your own or for which you do not have the legal right to display. Impersonating other artists will result in an immediate ban.</p>
+                                    <h3 className={styles.termTitle}>Data Purpose</h3>
+                                    <p>This data is used for internal performance optimization and to provide creators with engagement analytics. All behavioral data is handled in accordance with our Privacy Policy.</p>
                                 </div>
                             </div>
 
@@ -108,47 +82,17 @@ export default function TermsPage() {
                             <div className={styles.section}>
                                 <h2 className={styles.sectionTitle}>
                                     <span className={styles.sectionNumber}>4</span>
-                                    Limitation of Liability & "As-Is" Service
+                                    Communications & Marketing
                                 </h2>
 
-                                <div className={styles.subsection}>
-                                    <h3 className={styles.subsectionTitle}>4.1 Service "As-Is" and "As-Available"</h3>
-                                    <p className={styles.intro}>
-                                        Hargao provides a browser-based 3D environment that relies on the user's hardware (GPU) and internet connection. You acknowledge that:
-                                    </p>
-                                    <ul className={styles.bulletList}>
-                                        <li>The appearance of your portfolio (lighting, textures, and frame rate) may vary significantly across different devices, browsers, and hardware specifications.</li>
-                                        <li>Hargao is currently in its Minimum Viable Product (MVP) stage. We do not guarantee that the service will be uninterrupted, bug-free, or compatible with all web browsers at all times.</li>
-                                    </ul>
+                                <div className={styles.term}>
+                                    <h3 className={styles.termTitle}>Email Consent</h3>
+                                    <p>By creating an account, you agree to receive administrative emails (password resets, billing) and occasional promotional emails regarding new features, themes, or community highlights.</p>
                                 </div>
 
-                                <div className={styles.subsection}>
-                                    <h3 className={styles.subsectionTitle}>4.2 High-Stakes Usage Disclaimer</h3>
-                                    <p className={styles.intro}>
-                                        Hargao is a tool for creative presentation. However, Hargao is not liable for any professional or financial loss resulting from:
-                                    </p>
-
-                                    <div className={styles.term}>
-                                        <h3 className={styles.termTitle}>Service Downtime</h3>
-                                        <p>If a gallery link fails to load during a live client pitch, job interview, or agency presentation.</p>
-                                    </div>
-
-                                    <div className={styles.term}>
-                                        <h3 className={styles.termTitle}>Data Loss</h3>
-                                        <p>While we aim to protect your work, we are not a permanent backup service. You are responsible for maintaining original copies of all uploaded 2D assets.</p>
-                                    </div>
-
-                                    <div className={styles.term}>
-                                        <h3 className={styles.termTitle}>Visual Discrepancies</h3>
-                                        <p>Variations in "Time of Day" sliders or lighting effects that may result in your art appearing differently than intended on a viewer's screen.</p>
-                                    </div>
-                                </div>
-
-                                <div className={styles.subsection}>
-                                    <h3 className={styles.subsectionTitle}>4.3 Cap on Liability</h3>
-                                    <p className={styles.highlight}>
-                                        To the maximum extent permitted by law, Hargao's total liability for any claim arising out of the use of the platform—whether in contract, tort, or otherwise—is limited to the total amount paid by you to Hargao in the twelve (12) months prior to the event, or <strong>$50.00 USD</strong>, whichever is greater.
-                                    </p>
+                                <div className={styles.term}>
+                                    <h3 className={styles.termTitle}>Opt-Out</h3>
+                                    <p>You may opt out of promotional communications at any time by clicking the "Unsubscribe" link found at the bottom of our emails.</p>
                                 </div>
                             </div>
 
@@ -156,15 +100,28 @@ export default function TermsPage() {
                             <div className={styles.section}>
                                 <h2 className={styles.sectionTitle}>
                                     <span className={styles.sectionNumber}>5</span>
-                                    Indemnification
+                                    User Conduct & Content Restrictions
                                 </h2>
+
                                 <p className={styles.intro}>
-                                    You agree to indemnify and hold harmless Hargao and its team from any claims, damages, or legal fees arising from:
+                                    You represent that you own the rights to all content you upload.
                                 </p>
-                                <ul className={styles.bulletList}>
-                                    <li>Your violation of the Prohibited Content rules (e.g., if you upload copyrighted work you don't own).</li>
-                                    <li>Any third-party claims regarding the content displayed in your 3D gallery.</li>
-                                </ul>
+
+                                <p className={styles.intro}>
+                                    Hargao prohibits the upload of content that is illegal, infringes on another's IP, or contains explicit graphic violence or hate speech. We reserve the right to remove any gallery that violates these standards.
+                                </p>
+                            </div>
+
+                            {/* Section 6 */}
+                            <div className={styles.section}>
+                                <h2 className={styles.sectionTitle}>
+                                    <span className={styles.sectionNumber}>6</span>
+                                    Limitation of Liability
+                                </h2>
+
+                                <p className={styles.highlight}>
+                                    Hargao is provided "as-is." We are not liable for any technical interruptions, loss of data, or the unauthorized use of your shareable gallery links by third parties.
+                                </p>
                             </div>
 
                             {/* Back Link */}

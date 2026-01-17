@@ -133,6 +133,25 @@ export default function CreatePage() {
     const handlePaintingImageChange = (e: ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
+            // Validate file type - only JPG and PNG allowed
+            const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+            if (!allowedTypes.includes(file.type)) {
+                setSubmitError('Only JPG and PNG images are allowed for paintings.');
+                e.target.value = ''; // Reset input
+                return;
+            }
+
+            // Validate file size - max 5MB
+            const maxSize = 5 * 1024 * 1024; // 5MB in bytes
+            if (file.size > maxSize) {
+                setSubmitError('Painting image must be under 5MB.');
+                e.target.value = ''; // Reset input
+                return;
+            }
+
+            // Clear any previous errors
+            setSubmitError(null);
+
             const reader = new FileReader();
             reader.onloadend = () => {
                 setFormData(prev => {
@@ -573,7 +592,7 @@ export default function CreatePage() {
                                     <input
                                         ref={paintingInputRef}
                                         type="file"
-                                        accept="image/*"
+                                        accept=".jpg,.jpeg,.png"
                                         onChange={handlePaintingImageChange}
                                         hidden
                                     />

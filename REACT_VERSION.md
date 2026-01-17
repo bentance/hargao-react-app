@@ -226,7 +226,7 @@ storage/
 | Type | Max Size | Formats | Notes |
 |------|----------|---------|-------|
 | Profile Image | 5MB | JPG, PNG, GIF, WebP | Stored as `profile.jpg` |
-| Painting Image | 10MB | JPG, PNG, GIF, WebP | Named `painting_{id}.{ext}` |
+| Painting Image | 5MB | JPG, PNG | GIF not allowed, named `painting_{id}.{ext}` |
 
 ---
 
