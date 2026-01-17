@@ -118,6 +118,11 @@ export class GameUI {
         this.uiTexture.addControl(this.backdropOverlay);
     }
 
+    // Message instruction image
+    private messageImage!: Image;
+    private messageCloseHintContainer!: Rectangle;
+    private messageCloseHint!: TextBlock;
+
     private createMessageContainer(): void {
         // ===== Welcome/Message Container =====
         // Now using shared popup helper for consistency
@@ -125,20 +130,51 @@ export class GameUI {
         this.messageContainer = popup.container;
         const messageStack = popup.stackPanel;
 
-        // Manual centering for short Welcome message
-        messageStack.paddingTop = "35%";
+        // Reduced padding for larger image
+        messageStack.paddingTop = isPhoneDevice() ? "5%" : (isMobileDevice() ? "8%" : "10%");
 
-        // Message text
+        // Message text (title)
         this.messageText = new TextBlock("messageText");
         this.messageText.text = "";
         this.messageText.color = this.theme.textColor;
-        this.messageText.fontSize = isMobileDevice() ? 18 : 24;
+        this.messageText.fontSize = isMobileDevice() ? 20 : 28;
         this.messageText.fontFamily = this.theme.fontFamily;
         this.messageText.textWrapping = true;
-        this.messageText.resizeToFit = true; // Auto resize height
+        this.messageText.resizeToFit = true;
         this.messageText.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_CENTER;
-
         messageStack.addControl(this.messageText);
+
+        // Instruction image (shown on welcome message) - 4x bigger
+        this.messageImage = new Image("messageImage", "");
+        this.messageImage.width = "95%";
+        this.messageImage.height = isPhoneDevice() ? "350px" : (isMobileDevice() ? "500px" : "550px");
+        this.messageImage.stretch = Image.STRETCH_UNIFORM;
+        this.messageImage.isVisible = false;
+        this.messageImage.paddingTop = "15px";
+        messageStack.addControl(this.messageImage);
+
+        // Close hint container (yellow background)
+        this.messageCloseHintContainer = new Rectangle("messageCloseHintContainer");
+        this.messageCloseHintContainer.width = isMobileDevice() ? "200px" : "250px";
+        this.messageCloseHintContainer.height = isMobileDevice() ? "40px" : "50px";
+        this.messageCloseHintContainer.background = "#FFFF00"; // Yellow background
+        this.messageCloseHintContainer.color = "#CC0000"; // Red border
+        this.messageCloseHintContainer.thickness = 2;
+        this.messageCloseHintContainer.cornerRadius = 5;
+        this.messageCloseHintContainer.paddingTop = "20px";
+        this.messageCloseHintContainer.isVisible = false;
+        messageStack.addControl(this.messageCloseHintContainer);
+
+        // Close hint text (red bold text inside yellow container)
+        this.messageCloseHint = new TextBlock("messageCloseHint");
+        this.messageCloseHint.text = "";
+        this.messageCloseHint.color = "#CC0000"; // Red text
+        this.messageCloseHint.fontSize = isMobileDevice() ? 16 : 20;
+        this.messageCloseHint.fontFamily = this.theme.fontFamily;
+        this.messageCloseHint.fontWeight = "bold";
+        this.messageCloseHint.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_CENTER;
+        this.messageCloseHint.textVerticalAlignment = Control.VERTICAL_ALIGNMENT_CENTER;
+        this.messageCloseHintContainer.addControl(this.messageCloseHint);
     }
 
     private createPaintingContainer(): void {
@@ -344,7 +380,7 @@ export class GameUI {
 
         // Close hint for about
         this.aboutCloseHint = new TextBlock("aboutCloseHint");
-        this.aboutCloseHint.text = isMobile ? "(Tap E to close)" : "(Press E to close)";
+        this.aboutCloseHint.text = isMobile ? "(tap E to close)" : "(press E to close)";
         this.aboutCloseHint.color = this.theme.hintColor;
         this.aboutCloseHint.fontSize = isPhone ? 10 : (isMobile ? 12 : 14);
         this.aboutCloseHint.fontFamily = this.theme.fontFamily;
@@ -381,21 +417,184 @@ export class GameUI {
 
         watermark.textContent = MAIN_CONFIG.brandName;
 
-        // Add click listener for invalidating brandWebsite
+        // Add click listener to show navigation popup
         watermark.addEventListener('click', () => {
-            const url = (MAIN_CONFIG.brandWebsite || "youtube.com"); // Fallback just in case
-            const fullUrl = url.startsWith('http') ? url : `https://${url}`;
-            window.open(fullUrl, '_blank');
+            this.showBrandPopup();
         });
 
         document.body.appendChild(watermark);
     }
 
-    public showMessage(text: string): void {
+    private showBrandPopup(): void {
+        // Remove existing popup if any
+        const existingPopup = document.getElementById('brandPopup');
+        if (existingPopup) {
+            existingPopup.remove();
+            return; // Toggle off
+        }
+
+        const isMobile = isMobileDevice();
+        const theme = this.theme;
+
+        // Create overlay
+        const overlay = document.createElement('div');
+        overlay.id = 'brandPopup';
+        Object.assign(overlay.style, {
+            position: 'fixed',
+            top: '0',
+            left: '0',
+            width: '100%',
+            height: '100%',
+            backgroundColor: 'rgba(0, 0, 0, 0.85)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: '2000',
+            cursor: 'pointer'
+        });
+
+        // Create popup container
+        const popup = document.createElement('div');
+        Object.assign(popup.style, {
+            position: 'relative',
+            backgroundColor: theme.background,
+            border: `${theme.borderThickness}px solid ${theme.borderColor}`,
+            borderRadius: `${theme.cornerRadius}px`,
+            padding: isMobile ? '35px 25px 25px' : '45px 35px 35px',
+            maxWidth: '90%',
+            width: isMobile ? '300px' : '380px',
+            textAlign: 'center',
+            cursor: 'default'
+        });
+
+        // Prevent popup clicks from closing
+        popup.addEventListener('click', (e) => e.stopPropagation());
+
+        // X Close button in top right
+        const closeBtn = document.createElement('button');
+        closeBtn.textContent = '×';
+        Object.assign(closeBtn.style, {
+            position: 'absolute',
+            top: '10px',
+            right: '10px',
+            width: '30px',
+            height: '30px',
+            backgroundColor: 'transparent',
+            color: theme.subtitleColor || '#888',
+            border: 'none',
+            borderRadius: '50%',
+            fontFamily: 'Arial, sans-serif',
+            fontSize: '24px',
+            fontWeight: 'bold',
+            lineHeight: '1',
+            cursor: 'pointer',
+            transition: 'all 0.15s',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+        });
+        closeBtn.addEventListener('mouseenter', () => {
+            closeBtn.style.backgroundColor = theme.borderColor;
+            closeBtn.style.color = '#000';
+        });
+        closeBtn.addEventListener('mouseleave', () => {
+            closeBtn.style.backgroundColor = 'transparent';
+            closeBtn.style.color = theme.subtitleColor || '#888';
+        });
+        closeBtn.addEventListener('click', () => overlay.remove());
+        popup.appendChild(closeBtn);
+
+        // Title
+        const title = document.createElement('h2');
+        title.textContent = MAIN_CONFIG.brandName.toLowerCase();
+        Object.assign(title.style, {
+            margin: '0 0 25px 0',
+            fontFamily: theme.fontFamily,
+            fontSize: isMobile ? '26px' : '32px',
+            fontWeight: 'bold',
+            color: '#008080',
+            letterSpacing: '3px',
+            fontVariant: 'small-caps'
+        });
+        popup.appendChild(title);
+
+        // Button styles - matching other popup messages
+        const createNavBtn = (text: string, href: string, isPrimary: boolean = false) => {
+            const btn = document.createElement('a');
+            btn.href = href;
+            btn.target = '_blank';
+            btn.rel = 'noopener noreferrer';
+            btn.textContent = text;
+            Object.assign(btn.style, {
+                display: 'block',
+                width: '100%',
+                padding: isMobile ? '14px' : '16px',
+                marginBottom: '12px',
+                backgroundColor: isPrimary ? theme.borderColor : theme.background,
+                color: isPrimary ? '#000' : theme.textColor,
+                border: `2px solid ${theme.borderColor}`,
+                borderRadius: `${theme.cornerRadius}px`,
+                fontFamily: theme.fontFamily,
+                fontSize: isMobile ? '14px' : '16px',
+                fontWeight: '500',
+                textDecoration: 'none',
+                cursor: 'pointer',
+                boxSizing: 'border-box',
+                textAlign: 'center',
+                transition: 'all 0.15s ease'
+            });
+            btn.addEventListener('mouseenter', () => {
+                btn.style.backgroundColor = isPrimary ? theme.textColor : theme.borderColor;
+                btn.style.color = isPrimary ? theme.borderColor : '#000';
+                btn.style.transform = 'scale(1.02)';
+            });
+            btn.addEventListener('mouseleave', () => {
+                btn.style.backgroundColor = isPrimary ? theme.borderColor : theme.background;
+                btn.style.color = isPrimary ? '#000' : theme.textColor;
+                btn.style.transform = 'none';
+            });
+            return btn;
+        };
+
+        // Create navigation buttons
+        popup.appendChild(createNavBtn('Create (~2mins, free)', '/create', true));
+        popup.appendChild(createNavBtn('Other Galleries', '/featured'));
+        popup.appendChild(createNavBtn('Homepage', '/'));
+
+        overlay.appendChild(popup);
+
+        // Close on overlay click
+        overlay.addEventListener('click', () => overlay.remove());
+
+        document.body.appendChild(overlay);
+    }
+
+    public showMessage(text: string, showInstructionImage: boolean = false): void {
         this.backdropOverlay.isVisible = true;
 
-        const closeText = isMobileDevice() ? "(Tap E to close)" : "(Press E to close)";
-        this.messageText.text = `${text}\n\n${closeText}`;
+        const closeText = isMobileDevice() ? "Tap E to close" : "Press E to close";
+
+        // Show instruction image if requested
+        if (showInstructionImage) {
+            // Just the title, no close hint in main text
+            this.messageText.text = text;
+
+            const instructionImage = isMobileDevice()
+                ? "/ui/Mobile_View_Instructions_v0.jpg"
+                : "/ui/Desktop_View_Instructions_v0.jpg";
+            this.messageImage.source = instructionImage;
+            this.messageImage.isVisible = true;
+
+            // Show close hint below image (yellow background, red text)
+            this.messageCloseHint.text = closeText;
+            this.messageCloseHintContainer.isVisible = true;
+        } else {
+            // No image - include close hint in main text
+            this.messageText.text = `${text}\n\n(${closeText})`;
+            this.messageImage.source = "";
+            this.messageImage.isVisible = false;
+            this.messageCloseHintContainer.isVisible = false;
+        }
 
         this.messageContainer.isVisible = true;
         this.paintingContainer.isVisible = false;

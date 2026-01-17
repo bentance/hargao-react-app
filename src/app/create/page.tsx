@@ -397,7 +397,7 @@ export default function CreatePage() {
                                                 value={formData.password}
                                                 onChange={handleInputChange}
                                                 className="neo-input"
-                                                placeholder="Enter password"
+                                                placeholder="Min 8 chars, letters, numbers & symbols"
                                                 required
                                             />
                                         </div>
@@ -470,7 +470,7 @@ export default function CreatePage() {
                                         </div>
 
                                         <div className="form-group">
-                                            <label className="form-label">Bio</label>
+                                            <label className="form-label">Bio <span className={styles.optionalTag}>(Optional)</span></label>
                                             <textarea
                                                 name="bio"
                                                 value={formData.bio}
@@ -483,7 +483,7 @@ export default function CreatePage() {
 
                                         <div className={styles.twoColumns}>
                                             <div className="form-group">
-                                                <label className="form-label">Website</label>
+                                                <label className="form-label">Website <span className={styles.optionalTag}>(Optional)</span></label>
                                                 <input
                                                     type="url"
                                                     name="website"
@@ -495,7 +495,7 @@ export default function CreatePage() {
                                             </div>
 
                                             <div className="form-group">
-                                                <label className="form-label">Instagram</label>
+                                                <label className="form-label">Instagram <span className={styles.optionalTag}>(Optional)</span></label>
                                                 <input
                                                     type="text"
                                                     name="instagram"
@@ -633,7 +633,7 @@ export default function CreatePage() {
                         <div className="step-content">
                             <div className="form-grid">
                                 <div className="form-group">
-                                    <label className="form-label">Gallery Name <span className={styles.required}>*</span></label>
+                                    <label className="form-label">Gallery Name</label>
                                     <input
                                         type="text"
                                         name="galleryName"
@@ -655,7 +655,7 @@ export default function CreatePage() {
                                 </div>
 
                                 <div className="form-group">
-                                    <label className="form-label">Description</label>
+                                    <label className="form-label">Description <span className={styles.optionalTag}>(Optional)</span></label>
                                     <textarea
                                         name="galleryDescription"
                                         value={formData.galleryDescription}
@@ -818,7 +818,7 @@ export default function CreatePage() {
                 <div className={styles.modalOverlay}>
                     <div className={styles.modal}>
                         <div className={styles.modalHeader}>
-                            <h2>📤 Publishing Gallery...</h2>
+                            <h2>Publishing Gallery...</h2>
                         </div>
                         <div className={styles.modalContent}>
                             <div className={styles.spinner}></div>

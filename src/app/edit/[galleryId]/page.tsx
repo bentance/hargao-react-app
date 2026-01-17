@@ -318,7 +318,7 @@ export default function EditGalleryPage() {
                     <h2>Gallery Settings</h2>
 
                     <div className={styles.formGroup}>
-                        <label>Gallery Name *</label>
+                        <label>Gallery Name</label>
                         <input
                             type="text"
                             value={galleryName}

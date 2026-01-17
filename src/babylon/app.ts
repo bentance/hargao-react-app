@@ -294,12 +294,8 @@ export class App {
             );
         }
 
-        // Show welcome message with mobile-appropriate controls hint
-        if (isMobileDevice()) {
-            this.ui.showMessage("Welcome to my gallery!\n\nUse joystick to move, tap E button to interact!");
-        } else {
-            this.ui.showMessage("Welcome to my gallery!\n\nWASD to move, E to interact and R to restart, enjoy!");
-        }
+        // Show welcome message with instruction image
+        this.ui.showMessage("Welcome to my gallery!", true);
     }
 
     /**

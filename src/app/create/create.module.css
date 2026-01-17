@@ -14,18 +14,17 @@
     text-transform: none;
 }
 
-/* Header Info Notes (shared style) */
+/* Header Info Notes (informational style, not button-like) */
 .infoNote {
     display: inline-block;
     margin-top: var(--space-md);
     margin-left: var(--space-sm);
     margin-right: var(--space-sm);
-    padding: var(--space-sm) var(--space-md);
-    background: var(--color-text);
-    border: 2px solid white;
-    font-weight: 600;
-    font-size: 0.875rem;
-    color: white;
+    padding: var(--space-sm) 0;
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: var(--color-text);
+    text-decoration: underline;
 }
 
 /* Info Notes Container */
@@ -35,6 +34,15 @@
     justify-content: center;
     gap: var(--space-sm);
     margin-top: var(--space-md);
+}
+
+/* Optional field tag */
+.optionalTag {
+    font-weight: 400;
+    font-size: 0.8rem;
+    color: #666;
+    font-style: italic;
+    text-transform: none;
 }
 
 /* Hero GIF */
