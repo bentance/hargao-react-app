@@ -14,7 +14,7 @@ export default function Home() {
         </header>
 
         {/* Hero GIF */}
-        <div className={styles.heroGifContainer}>
+        <Link href="/explore" className={styles.heroGifContainer}>
           <Image
             src="/gif_for_homepage_v0.gif"
             alt="HARGAO Gallery Preview"
@@ -23,7 +23,8 @@ export default function Home() {
             height={300}
             unoptimized
           />
-        </div>
+          <span className={styles.heroGifOverlay}>Enter Gallery</span>
+        </Link>
 
         {/* Main Actions - Two cards */}
         <div className={styles.actionCards}>

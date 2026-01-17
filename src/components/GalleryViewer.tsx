@@ -66,7 +66,7 @@ export default function GalleryViewer({
             try {
                 // Dynamic import to avoid SSR issues
                 const { App } = await import('@/babylon/app');
-                const { setGalleryData, setUserData, setAppMode, setUserType } = await import('@/babylon/config');
+                const { setGalleryData, setUserData, setAppMode, setUserType, loadGalleryConfig } = await import('@/babylon/config');
 
                 // Check again if still mounted after async operations
                 if (!isMounted) return;
@@ -79,6 +79,17 @@ export default function GalleryViewer({
 
                 // Set user type (default/explore/admin)
                 setUserType(mode);
+
+                // For explore mode, load the first gallery config BEFORE creating the app
+                if (mode === 'explore' && source === 'offline') {
+                    console.log('Explore mode: Loading gallery 1 config...');
+                    const success = await loadGalleryConfig(1);
+                    if (success) {
+                        console.log('Gallery 1 config loaded successfully');
+                    } else {
+                        console.error('Failed to load gallery 1 config');
+                    }
+                }
 
                 // Set gallery data if in online mode
                 if (source === 'online' && galleryData) {
