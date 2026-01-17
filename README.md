@@ -234,6 +234,37 @@ gallery-creator/
 
 ---
 
+## Typography
+
+The application uses Google Fonts for a modern, clean aesthetic:
+
+### Primary Fonts
+
+| Font | Variable | Usage | Weights |
+|------|----------|-------|---------|
+| **Space Grotesk** | `--font-heading` | Headings, body text, buttons, inputs | 400, 500, 600, 700 |
+| **Space Mono** | `--font-mono` | Code blocks, URL previews, monospace text | 400, 700 |
+
+### System Fallbacks
+
+- **Space Grotesk** falls back to: `system-ui, sans-serif`
+- **Space Mono** falls back to: `monospace`
+
+### Additional System Fonts (Babylon.js viewer)
+
+| Font | Usage |
+|------|-------|
+| `-apple-system, monospace` | 3D viewer UI elements (loading screen, debug info) |
+
+### Font CDN
+
+Fonts are loaded via Google Fonts CDN in `globals.css`:
+```css
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
+```
+
+---
+
 ## Loading Screen
 
 The Babylon.js viewer includes a custom loading screen with:
