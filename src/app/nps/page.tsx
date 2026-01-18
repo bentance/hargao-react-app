@@ -1,12 +1,13 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import styles from './nps.module.css';
 
-export default function NPSPage() {
+// Inner component that uses useSearchParams
+function NPSContent() {
     const searchParams = useSearchParams();
     const [score, setScore] = useState<number | null>(null);
     const [comment, setComment] = useState('');
@@ -181,5 +182,30 @@ export default function NPSPage() {
                 </div>
             </div>
         </main>
+    );
+}
+
+// Loading fallback for Suspense
+function NPSLoading() {
+    return (
+        <main className={styles.main}>
+            <div className={styles.container}>
+                <div className={styles.card}>
+                    <div className={styles.header}>
+                        <h1>Quick Feedback</h1>
+                        <p>Loading...</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    );
+}
+
+// Main export wrapped in Suspense boundary
+export default function NPSPage() {
+    return (
+        <Suspense fallback={<NPSLoading />}>
+            <NPSContent />
+        </Suspense>
     );
 }
