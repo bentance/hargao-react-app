@@ -1,15 +1,16 @@
-import { Engine, Scene, Vector3, HemisphericLight, DirectionalLight, Color3, Color4, ArcRotateCamera, MeshBuilder, ShadowGenerator, CubeTexture, Texture, StandardMaterial, DynamicTexture } from "@babylonjs/core";
+import { Engine, Scene, Vector3, ArcRotateCamera, ShadowGenerator } from "@babylonjs/core";
 import "@babylonjs/inspector";
 import { Player } from "./player";
 import { Environment } from "./environment";
 import { InputController } from "./inputController";
-import { SkyMaterial } from "@babylonjs/materials";
-import { CAMERA_CONFIG, LIGHTING_CONFIG, INTERACTION_CONFIG, getPaintingById, GAME_CONFIG, USER_CONFIG, MAIN_CONFIG, switchGallery } from "./config";
+import { CAMERA_CONFIG, INTERACTION_CONFIG, getPaintingById, GAME_CONFIG, USER_CONFIG, MAIN_CONFIG, switchGallery } from "./config";
 import { InputKey } from "./types";
 import { GameUI } from "./ui";
 import { LEVELS } from "./levels/list";
 import { MobileController, isMobileDevice, isPhoneDevice, createDesktopViewIndicator } from "./mobileController";
 import { NavigationController } from "./navigationController";
+import { setupLighting, setupSkybox } from "./sceneManager";
+import { showLoadingScreen, hideLoadingScreen, showErrorMessage, setupGlobalErrorHandlers } from "./loadingScreen";
 
 /**
  * Main application class - handles game initialization and loop
@@ -55,20 +56,17 @@ export class App {
     }
 
     private async initialize(canvas: HTMLCanvasElement): Promise<void> {
+        // Setup global error handlers once
+        setupGlobalErrorHandlers();
+
         try {
             await this.setup();
             this.setupInputHandlers(canvas);
             this.run();
         } catch (error) {
             console.error("Failed to initialize app:", error);
-            // Hide loading screen if it's still there
-            this.hideCustomLoadingUI();
-
-            // Show user-friendly error message
-            const errorDiv = document.createElement('div');
-            errorDiv.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#333;color:#fff;padding:20px;border-radius:10px;text-align:center;z-index:9999;max-width:80%;';
-            errorDiv.innerHTML = `<h3>Failed to load</h3><p>Please try refreshing the page.</p><p style="font-size:12px;color:#999;">${error}</p>`;
-            document.body.appendChild(errorDiv);
+            hideLoadingScreen();
+            showErrorMessage(error);
         }
     }
 
@@ -265,7 +263,7 @@ export class App {
         // Hide loading screen when scene is truly ready
         this.scene.executeWhenReady(() => {
             console.log("Scene is ready, hiding loading screen");
-            this.hideCustomLoadingUI();
+            hideLoadingScreen();
         });
 
         // Connect UI visibility to input blocking (Works for both Mobile & Desktop)
@@ -344,7 +342,7 @@ export class App {
      * For "admin" users: switches between levels
      */
     private async changeLevel(offset: number): Promise<void> {
-        this.showCustomLoadingUI();
+        showLoadingScreen();
         // Wait a frame to let UI render
         await new Promise(resolve => setTimeout(resolve, 0));
 
@@ -381,7 +379,7 @@ export class App {
         } catch (error) {
             console.error("Failed to change level:", error);
             // Hide on error so user isn't stuck
-            this.hideCustomLoadingUI();
+            hideLoadingScreen();
         }
     }
 
@@ -393,173 +391,16 @@ export class App {
         scene.collisionsEnabled = true;
         scene.gravity = new Vector3(0, -9.81, 0);
 
-        this.setupLighting(scene);
-        this.setupSkybox(scene);
+        // Setup lighting using extracted module
+        const { shadowGenerator } = setupLighting(scene);
+        this.shadowGenerator = shadowGenerator;
+
+        // Setup skybox using extracted module
+        setupSkybox(scene);
 
         return scene;
     }
 
-    /**
-     * Setup scene lighting
-     */
-    private setupLighting(scene: Scene): void {
-        const { hemispheric, directional, shadow } = LIGHTING_CONFIG;
-        const currentLevel = LEVELS[GAME_CONFIG.currentLevel - 1];
-        const isIndoor = currentLevel?.disableSunLight;
-
-        // Ambient Light - brighter for indoor scenes
-        const hemiLight = new HemisphericLight("hemiLight", new Vector3(0, 1, 0), scene);
-        hemiLight.intensity = isIndoor ? 1.2 : hemispheric.intensity;
-        hemiLight.diffuse = new Color3(
-            hemispheric.diffuseColor.r,
-            hemispheric.diffuseColor.g,
-            hemispheric.diffuseColor.b
-        );
-        hemiLight.groundColor = new Color3(
-            hemispheric.groundColor.r,
-            hemispheric.groundColor.g,
-            hemispheric.groundColor.b
-        );
-
-        // Directional Light - disable for indoor levels
-        const dirLight = new DirectionalLight(
-            "dirLight",
-            new Vector3(directional.direction.x, directional.direction.y, directional.direction.z),
-            scene
-        );
-        dirLight.position = new Vector3(
-            directional.position.x,
-            directional.position.y,
-            directional.position.z
-        );
-
-        // For indoor levels, use focused Directional Light now that ceiling is gone
-        if (isIndoor) {
-            dirLight.intensity = 1.5;
-            dirLight.position = new Vector3(10, 20, 10); // Offset position to match angle
-            dirLight.direction = new Vector3(-0.5, -0.7, -0.4).normalize(); // Stronger angle for visible shadows
-
-            // Tight shadow frustum for the room
-            dirLight.autoUpdateExtends = false;
-            dirLight.shadowMinZ = -20;
-            dirLight.shadowMaxZ = 100;
-            dirLight.orthoLeft = -30;
-            dirLight.orthoRight = 30;
-            dirLight.orthoTop = 30;
-            dirLight.orthoBottom = -30;
-
-            // Shadow Generator - use lower resolution on phones
-            const shadowMapSize = isPhoneDevice() ? 512 : 2048;
-            this.shadowGenerator = new ShadowGenerator(shadowMapSize, dirLight);
-
-            // Use simpler filtering on phones
-            if (isPhoneDevice()) {
-                this.shadowGenerator.usePoissonSampling = true;
-            } else {
-                this.shadowGenerator.usePercentageCloserFiltering = true;
-                this.shadowGenerator.filteringQuality = ShadowGenerator.QUALITY_HIGH;
-            }
-            this.shadowGenerator.darkness = 0.3;
-        } else {
-            dirLight.intensity = directional.intensity;
-
-            // Configure orthographic frustum for shadows to cover entire play area
-            dirLight.autoUpdateExtends = false;
-            dirLight.shadowMinZ = shadow.minZ;
-            dirLight.shadowMaxZ = shadow.maxZ;
-            dirLight.orthoLeft = -shadow.orthoSize;
-            dirLight.orthoRight = shadow.orthoSize;
-            dirLight.orthoTop = shadow.orthoSize;
-            dirLight.orthoBottom = -shadow.orthoSize;
-
-            // Shadow Generator for sun - use much lower resolution on phones
-            const shadowMapSize = isPhoneDevice() ? 512 : shadow.mapSize;
-            this.shadowGenerator = new ShadowGenerator(shadowMapSize, dirLight);
-
-            // Use simpler filtering on phones
-            if (isPhoneDevice()) {
-                this.shadowGenerator.usePoissonSampling = true;
-            } else {
-                this.shadowGenerator.usePercentageCloserFiltering = true;
-                this.shadowGenerator.filteringQuality = ShadowGenerator.QUALITY_HIGH;
-            }
-        }
-
-        // Common settings
-        this.shadowGenerator.bias = 0.0001;
-        this.shadowGenerator.normalBias = 0.01;
-
-        // Store reference globally for player to access
-        (scene as any).mainShadowGenerator = this.shadowGenerator;
-
-        console.log("Shadow generator created, indoor:", isIndoor, "phone:", isPhoneDevice());
-    }
-
-    /**
-     * Setup skybox (procedural or cubemap based on level)
-     */
-    private setupSkybox(scene: Scene): void {
-        const currentLevel = LEVELS[GAME_CONFIG.currentLevel - 1];
-        const skybox = MeshBuilder.CreateBox("skyBox", { size: 1000.0 }, scene);
-
-        // For indoor levels with no sun, use dark navy background
-        if (currentLevel?.disableSunLight) {
-            const navyColor = new Color3(0.05, 0.05, 0.15);
-            scene.clearColor = new Color4(navyColor.r, navyColor.g, navyColor.b, 1);
-
-            const skyboxMaterial = new StandardMaterial("skyBoxMat", scene);
-            skyboxMaterial.backFaceCulling = false;
-            skyboxMaterial.disableLighting = true;
-            skyboxMaterial.emissiveColor = navyColor;
-            skyboxMaterial.diffuseColor = new Color3(0, 0, 0);
-            skyboxMaterial.specularColor = new Color3(0, 0, 0);
-            skybox.material = skyboxMaterial;
-        }
-        // Check for Color Scream level (Twilight Gradient)
-        else if (currentLevel?.isColorScream) {
-            const skyboxMaterial = new StandardMaterial("skyBoxMat", scene);
-            skyboxMaterial.backFaceCulling = false;
-            skyboxMaterial.disableLighting = true;
-
-            const texture = new DynamicTexture("skyGradient", 512, scene, true);
-            const ctx = texture.getContext();
-
-            // Create vertical gradient
-            const gradient = ctx.createLinearGradient(0, 0, 0, 512);
-            gradient.addColorStop(0, "#2c003e"); // Deep Purple (Top)
-            gradient.addColorStop(1, "#ff9a00"); // Orange (Bottom)
-
-            ctx.fillStyle = gradient;
-            ctx.fillRect(0, 0, 512, 512);
-            texture.update();
-
-            skyboxMaterial.emissiveTexture = texture;
-            skyboxMaterial.diffuseColor = new Color3(0, 0, 0);
-            skyboxMaterial.specularColor = new Color3(0, 0, 0);
-            skybox.material = skyboxMaterial;
-        }
-        // Check if level has a custom cubemap skybox
-        else if (currentLevel?.skyboxPath) {
-            // Use cubemap texture
-            const skyboxMaterial = new StandardMaterial("skyBoxMat", scene);
-            skyboxMaterial.backFaceCulling = false;
-            skyboxMaterial.reflectionTexture = new CubeTexture(currentLevel.skyboxPath, scene);
-            skyboxMaterial.reflectionTexture.coordinatesMode = Texture.SKYBOX_MODE;
-            skyboxMaterial.diffuseColor = new Color3(0, 0, 0);
-            skyboxMaterial.specularColor = new Color3(0, 0, 0);
-            skybox.material = skyboxMaterial;
-        } else {
-            // Use procedural sky
-            const skyboxMaterial = new SkyMaterial("skyMaterial", scene);
-            skyboxMaterial.backFaceCulling = false;
-            skyboxMaterial.inclination = 0;      // Sun elevation (0 = noon)
-            skyboxMaterial.azimuth = 0.25;       // Sun rotation
-            skyboxMaterial.luminance = 1.0;
-            skyboxMaterial.turbidity = 2;        // Haze
-            skyboxMaterial.rayleigh = 2;         // Atmosphere scattering
-            skybox.material = skyboxMaterial;
-        }
-    }
 
     /**
      * Start the render loop
@@ -585,28 +426,7 @@ export class App {
         });
     }
 
-    private showCustomLoadingUI(): void {
-        const loadingScreen = document.getElementById("loadingScreen");
-        if (loadingScreen) {
-            loadingScreen.style.display = "flex";
-            // Force reflow
-            void loadingScreen.offsetWidth;
-            loadingScreen.style.opacity = "1";
-        }
-    }
 
-    private hideCustomLoadingUI(): void {
-        const loadingScreen = document.getElementById("loadingScreen");
-        if (loadingScreen) {
-            loadingScreen.style.opacity = "0";
-            setTimeout(() => {
-                // Only hide if opacity is still 0 (in case it was shown again quickly)
-                if (loadingScreen.style.opacity === "0") {
-                    loadingScreen.style.display = "none";
-                }
-            }, 500);
-        }
-    }
 
     /**
      * Dispose of all resources - called when component unmounts
@@ -659,51 +479,3 @@ export class App {
         console.log("Babylon.js App disposed successfully");
     }
 }
-
-// Global error handler for debugging
-window.addEventListener('error', (event) => {
-    console.error("Global error:", event);
-    const errorDiv = document.createElement('div');
-    errorDiv.style.cssText = `
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        background-color: #c0392b;
-        color: white;
-        padding: 15px;
-        z-index: 99999;
-        font-family: -apple-system, monospace;
-        font-size: 12px;
-        word-break: break-word;
-    `;
-    errorDiv.innerHTML = `
-        <strong>Error:</strong> ${event.message}<br>
-        <small>File: ${event.filename?.split('/').pop() || 'unknown'}<br>
-        Line: ${event.lineno}</small>
-    `;
-    document.body.appendChild(errorDiv);
-});
-
-// Also catch unhandled promise rejections
-window.addEventListener('unhandledrejection', (event) => {
-    console.error("Unhandled rejection:", event.reason);
-    const errorDiv = document.createElement('div');
-    errorDiv.style.cssText = `
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        background-color: #8e44ad;
-        color: white;
-        padding: 15px;
-        z-index: 99999;
-        font-family: -apple-system, monospace;
-        font-size: 12px;
-        word-break: break-word;
-    `;
-    errorDiv.innerHTML = `
-        <strong>Promise Error:</strong> ${event.reason}<br>
-    `;
-    document.body.appendChild(errorDiv);
-});

@@ -2,19 +2,9 @@
 
 import { useState, useRef, ChangeEvent, FormEvent, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { BRAND_CONFIG, GALLERY_OPTIONS } from '@/config';
+import { BRAND_CONFIG, GALLERY_OPTIONS, CHAR_LIMITS } from '@/config';
 import { registerUser, createGallery, uploadProfileImage } from '@/lib';
 import styles from './create.module.css';
-
-// Character limits for form fields
-const CHAR_LIMITS = {
-    username: 30,
-    bio: 500,
-    galleryName: 50,
-    galleryDescription: 1000,
-    paintingTitle: 100,
-    paintingDescription: 500,
-};
 
 // Character counter component
 const CharCounter = ({ current, max }: { current: number; max: number }) => {

@@ -99,4 +99,17 @@ export const GALLERY_OPTIONS = {
     minPaintings: 1,
 };
 
+/**
+ * Character Limits for Form Fields
+ * Used for validation and character counters
+ */
+export const CHAR_LIMITS = {
+    username: 30,
+    bio: 500,
+    galleryName: 50,
+    galleryDescription: 1000,
+    paintingTitle: 100,
+    paintingDescription: 500,
+};
+
 export default BRAND_CONFIG;
