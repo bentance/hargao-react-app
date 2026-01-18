@@ -25,6 +25,7 @@ interface GalleryData {
     isPublished: boolean;
     isFeatured: boolean;
     paintings: any[];
+    viewCount: number;
 }
 
 interface FeedbackData {
@@ -165,6 +166,7 @@ export default function AdminPage() {
                         isPublished: data.isPublished,
                         isFeatured: data.isFeatured,
                         paintings: data.paintings || [],
+                        viewCount: data.viewCount || 0,
                         ownerUsername: data.ownerUsername || 'unknown'
                     });
                 }
@@ -243,6 +245,7 @@ export default function AdminPage() {
                         isPublished: data.isPublished,
                         isFeatured: data.isFeatured || false,
                         paintings: data.paintings || [],
+                        viewCount: data.viewCount || 0,
                     });
                 }
             });
@@ -516,7 +519,7 @@ export default function AdminPage() {
                                                         /@{selectedUser.username}/{gallery.slug}
                                                     </a>
                                                 </p>
-                                                <p>Paintings: {gallery.paintingsCount}</p>
+                                                <p>Paintings: {gallery.paintingsCount} &nbsp;|&nbsp; Views: {gallery.viewCount}</p>
 
                                                 {gallery.paintings.length > 0 && (
                                                     <div className={styles.paintingsGrid}>

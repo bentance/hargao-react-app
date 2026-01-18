@@ -155,9 +155,17 @@ export default function CatchAllPage({ params }: CatchAllPageProps) {
 
                 const galleryDoc = galleriesSnapshot.docs[0];
                 const gallery = galleryDoc.data();
+                const galleryId = galleryDoc.id;
 
                 console.log('Gallery data loaded:', gallery);
                 console.log('Environment from Firebase:', gallery.environment);
+
+                // Track view (fire and forget - don't wait for response)
+                fetch('/api/track-view', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ galleryId }),
+                }).catch(err => console.log('View tracking failed:', err));
 
                 // Level is 1-indexed (1=Gallery, 2=Museum, 3=SaltFlat, 4=ColorScream)
                 // Default to 2 (Classical Museum) if not set or 0
