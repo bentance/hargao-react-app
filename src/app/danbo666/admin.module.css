@@ -629,3 +629,80 @@
 .unfeatureBtn:hover {
     background: #c0392b;
 }
+
+/* NPS Summary */
+.npsSummary {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+    background: #252d3a;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.npsScore {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-right: 2rem;
+    border-right: 2px solid #333;
+}
+
+.npsLabel {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: #888;
+    margin-bottom: 0.5rem;
+}
+
+.npsValue {
+    font-size: 3rem;
+    font-weight: 800;
+    color: #78aaa6;
+}
+
+.npsBreakdown {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.promoters {
+    color: #2ecc71;
+    font-weight: 600;
+}
+
+.passives {
+    color: #f39c12;
+    font-weight: 600;
+}
+
+.detractors {
+    color: #e74c3c;
+    font-weight: 600;
+}
+
+/* NPS Score Badge */
+.npsScoreBadge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-weight: 700;
+}
+
+.npsScoreBadge.promoter {
+    background: rgba(46, 204, 113, 0.2);
+    color: #2ecc71;
+}
+
+.npsScoreBadge.passive {
+    background: rgba(243, 156, 18, 0.2);
+    color: #f39c12;
+}
+
+.npsScoreBadge.detractor {
+    background: rgba(231, 76, 60, 0.2);
+    color: #e74c3c;
+}

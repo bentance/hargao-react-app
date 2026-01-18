@@ -37,6 +37,16 @@ interface FeedbackData {
     isRead: boolean;
 }
 
+interface NPSData {
+    id: string;
+    score: number;
+    comment: string | null;
+    feedback: string | null;
+    createdAt: any;
+    userId: string | null;
+    galleryId: string | null;
+}
+
 export default function AdminPage() {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [password, setPassword] = useState('');
@@ -53,7 +63,7 @@ export default function AdminPage() {
     const [isDeleting, setIsDeleting] = useState(false);
 
     // Tab state
-    const [activeTab, setActiveTab] = useState<'users' | 'feedback' | 'featured'>('users');
+    const [activeTab, setActiveTab] = useState<'users' | 'feedback' | 'featured' | 'nps'>('users');
 
     // Feedback state
     const [feedbackList, setFeedbackList] = useState<FeedbackData[]>([]);
@@ -62,6 +72,10 @@ export default function AdminPage() {
     // Featured galleries state
     const [featuredGalleries, setFeaturedGalleries] = useState<(GalleryData & { ownerUsername: string })[]>([]);
     const [isFeaturedLoading, setIsFeaturedLoading] = useState(false);
+
+    // NPS responses state
+    const [npsResponses, setNpsResponses] = useState<NPSData[]>([]);
+    const [isNpsLoading, setIsNpsLoading] = useState(false);
 
     // Admin password from environment variable
     const ADMIN_PASSWORD = process.env.NEXT_PUBLIC_ADMIN_PASSWORD;
@@ -74,6 +88,7 @@ export default function AdminPage() {
             loadUsers();
             loadFeedback();
             loadFeaturedGalleries();
+            loadNpsResponses();
         } else {
             setError('Invalid password');
         }
@@ -108,6 +123,8 @@ export default function AdminPage() {
             const feedbacks: FeedbackData[] = [];
             feedbackSnapshot.forEach((doc) => {
                 const data = doc.data();
+                // Exclude NPS type - those show in their own tab
+                if (data.type === 'nps') return;
                 feedbacks.push({
                     id: doc.id,
                     name: data.name || 'Anonymous',
@@ -157,6 +174,41 @@ export default function AdminPage() {
             console.error('Error loading featured galleries:', err);
         } finally {
             setIsFeaturedLoading(false);
+        }
+    };
+
+    const loadNpsResponses = async () => {
+        setIsNpsLoading(true);
+        try {
+            // Load from feedback collection where type is 'nps'
+            const feedbackSnapshot = await getDocs(collection(db, 'feedback'));
+            const responses: NPSData[] = [];
+            feedbackSnapshot.forEach((doc) => {
+                const data = doc.data();
+                // Only include NPS type feedback
+                if (data.type === 'nps') {
+                    responses.push({
+                        id: doc.id,
+                        score: data.npsScore || 0,
+                        comment: data.npsComment || null,
+                        feedback: data.npsFeedback || null,
+                        createdAt: data.createdAt,
+                        userId: data.userId || null,
+                        galleryId: data.galleryId || null,
+                    });
+                }
+            });
+            // Sort by date, newest first
+            responses.sort((a, b) => {
+                const dateA = a.createdAt?.toDate?.() || new Date(0);
+                const dateB = b.createdAt?.toDate?.() || new Date(0);
+                return dateB.getTime() - dateA.getTime();
+            });
+            setNpsResponses(responses);
+        } catch (err: any) {
+            console.error('Error loading NPS responses:', err);
+        } finally {
+            setIsNpsLoading(false);
         }
     };
 
@@ -337,6 +389,9 @@ export default function AdminPage() {
                         <span className={styles.stats}>
                             Feedback: <strong>{feedbackList.length}</strong>
                         </span>
+                        <span className={styles.stats}>
+                            NPS: <strong>{npsResponses.length}</strong>
+                        </span>
                     </div>
                 </header>
 
@@ -359,6 +414,12 @@ export default function AdminPage() {
                         onClick={() => setActiveTab('featured')}
                     >
                         Featured ({featuredGalleries.length})
+                    </button>
+                    <button
+                        className={`${styles.tabBtn} ${activeTab === 'nps' ? styles.activeTab : ''}`}
+                        onClick={() => setActiveTab('nps')}
+                    >
+                        Net Promoter Score ({npsResponses.length})
                     </button>
                 </div>
 
@@ -547,6 +608,75 @@ export default function AdminPage() {
                                         >
                                             Remove from Featured
                                         </button>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+                )}
+
+                {/* Net Promoter Score Tab */}
+                {activeTab === 'nps' && (
+                    <div className={styles.feedbackSection}>
+                        <h2>Net Promoter Score ({npsResponses.length})</h2>
+
+                        {/* NPS Summary */}
+                        {npsResponses.length > 0 && (
+                            <div className={styles.npsSummary}>
+                                <div className={styles.npsScore}>
+                                    <span className={styles.npsLabel}>Average Score</span>
+                                    <span className={styles.npsValue}>
+                                        {(npsResponses.reduce((acc, r) => acc + r.score, 0) / npsResponses.length).toFixed(1)}
+                                    </span>
+                                </div>
+                                <div className={styles.npsBreakdown}>
+                                    <span className={styles.promoters}>
+                                        Promoters (9-10): {npsResponses.filter(r => r.score >= 9).length}
+                                    </span>
+                                    <span className={styles.passives}>
+                                        Passives (7-8): {npsResponses.filter(r => r.score >= 7 && r.score <= 8).length}
+                                    </span>
+                                    <span className={styles.detractors}>
+                                        Detractors (0-6): {npsResponses.filter(r => r.score <= 6).length}
+                                    </span>
+                                </div>
+                            </div>
+                        )}
+
+                        {isNpsLoading ? (
+                            <p>Loading NPS responses...</p>
+                        ) : npsResponses.length === 0 ? (
+                            <p className={styles.empty}>No NPS responses yet</p>
+                        ) : (
+                            <div className={styles.feedbackList}>
+                                {npsResponses.map((nps) => (
+                                    <div key={nps.id} className={styles.feedbackCard}>
+                                        <div className={styles.feedbackHeader}>
+                                            <span className={`${styles.npsScoreBadge} ${nps.score >= 9 ? styles.promoter :
+                                                nps.score >= 7 ? styles.passive :
+                                                    styles.detractor
+                                                }`}>
+                                                Score: {nps.score}
+                                            </span>
+                                            <span className={styles.feedbackDate}>
+                                                {nps.createdAt?.toDate?.().toLocaleDateString() || 'Unknown date'}
+                                            </span>
+                                        </div>
+                                        {nps.comment && (
+                                            <p className={styles.feedbackMessage}>
+                                                <strong>Reason:</strong> {nps.comment}
+                                            </p>
+                                        )}
+                                        {nps.feedback && (
+                                            <p className={styles.feedbackMessage}>
+                                                <strong>Feedback:</strong> {nps.feedback}
+                                            </p>
+                                        )}
+                                        {!nps.comment && !nps.feedback && (
+                                            <p className={styles.feedbackMessage} style={{ color: '#888' }}>
+                                                No additional comments
+                                            </p>
+                                        )}
                                     </div>
                                 ))}
                             </div>

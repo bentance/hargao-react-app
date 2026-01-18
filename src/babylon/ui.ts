@@ -85,6 +85,10 @@ export class GameUI {
         scrollViewer.barColor = "rgba(100, 100, 100, 0.5)";
         scrollViewer.barBackground = "transparent";
         scrollViewer.isPointerBlocker = true;
+
+        // Enable wheel scrolling
+        scrollViewer.wheelPrecision = 0.05; // Smaller = faster scroll
+
         container.addControl(scrollViewer);
 
         // 3. StackPanel for Content
@@ -102,9 +106,80 @@ export class GameUI {
 
         scrollViewer.addControl(stackPanel);
 
-
+        // 4. Add touch/drag scrolling support
+        this.enableTouchScrolling(scrollViewer);
 
         return { container, scrollViewer, stackPanel };
+    }
+
+    /**
+     * Enable touch/drag scrolling for a ScrollViewer
+     */
+    private enableTouchScrolling(scrollViewer: ScrollViewer): void {
+        let isDragging = false;
+        let lastY = 0;
+        let velocity = 0;
+        let animationFrame: number | null = null;
+
+        // Handle pointer down (start drag)
+        scrollViewer.onPointerDownObservable.add((eventData) => {
+            isDragging = true;
+            lastY = eventData.y;
+            velocity = 0;
+
+            // Cancel any ongoing momentum animation
+            if (animationFrame !== null) {
+                cancelAnimationFrame(animationFrame);
+                animationFrame = null;
+            }
+        });
+
+        // Handle pointer move (dragging)
+        scrollViewer.onPointerMoveObservable.add((eventData) => {
+            if (!isDragging) return;
+
+            const deltaY = lastY - eventData.y;
+            velocity = deltaY;
+            lastY = eventData.y;
+
+            // Scroll the content
+            const scrollSpeed = 0.003; // Adjust for sensitivity
+            scrollViewer.verticalBar.value += deltaY * scrollSpeed;
+
+            // Clamp value between 0 and 1
+            scrollViewer.verticalBar.value = Math.max(0, Math.min(1, scrollViewer.verticalBar.value));
+        });
+
+        // Handle pointer up (end drag with momentum)
+        scrollViewer.onPointerUpObservable.add(() => {
+            if (!isDragging) return;
+            isDragging = false;
+
+            // Apply momentum scrolling
+            const applyMomentum = () => {
+                if (Math.abs(velocity) < 0.5) {
+                    velocity = 0;
+                    animationFrame = null;
+                    return;
+                }
+
+                const scrollSpeed = 0.002;
+                scrollViewer.verticalBar.value += velocity * scrollSpeed;
+                scrollViewer.verticalBar.value = Math.max(0, Math.min(1, scrollViewer.verticalBar.value));
+
+                // Apply friction
+                velocity *= 0.92;
+
+                animationFrame = requestAnimationFrame(applyMomentum);
+            };
+
+            applyMomentum();
+        });
+
+        // Handle pointer out (stop dragging if cursor leaves)
+        scrollViewer.onPointerOutObservable.add(() => {
+            isDragging = false;
+        });
     }
 
     private createBackdropOverlay(): void {

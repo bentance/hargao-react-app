@@ -313,8 +313,27 @@ export default function CreatePage() {
 
             console.log('✅ Gallery created successfully!', gallery.id);
 
-            // 4. Show success modal
+            // 4. Send confirmation email with gallery link
             const galleryUrl = `/@${formData.username.toLowerCase()}/${formData.gallerySlug}`;
+            try {
+                console.log('📧 Sending confirmation email...');
+                await fetch('/api/send-email', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        to: formData.email,
+                        galleryUrl,
+                        username: formData.username,
+                        galleryName: formData.galleryName,
+                    }),
+                });
+                console.log('✅ Email sent!');
+            } catch (emailError) {
+                // Don't fail the whole process if email fails
+                console.error('⚠️ Email failed (non-critical):', emailError);
+            }
+
+            // 5. Show success modal
             setPublishedGalleryUrl(galleryUrl);
             setShowSuccessModal(true);
 
@@ -812,10 +831,24 @@ export default function CreatePage() {
                         </label>
                     </div>
 
-                    {/* Error Display */}
+                    {/* Error Popup Modal */}
                     {submitError && (
-                        <div className={styles.errorMessage}>
-                            ⚠️ {submitError}
+                        <div className={styles.modalOverlay} onClick={() => setSubmitError(null)}>
+                            <div className={styles.errorModal} onClick={(e) => e.stopPropagation()}>
+                                <div className={styles.errorModalHeader}>
+                                    <span className={styles.errorIcon}>⚠️</span>
+                                    <h3>Error</h3>
+                                </div>
+                                <div className={styles.errorModalContent}>
+                                    <p>{submitError}</p>
+                                </div>
+                                <button
+                                    className={styles.errorModalBtn}
+                                    onClick={() => setSubmitError(null)}
+                                >
+                                    OK
+                                </button>
+                            </div>
                         </div>
                     )}
 
