@@ -137,13 +137,19 @@ export class FreestandingArtBuilder extends BaseLevelBuilder {
     }
 
     private async createAboutStand(): Promise<void> {
-        const aboutSize = 2.5;
+        const fixedHeight = 2.5; // Fixed height, width will adjust based on aspect ratio
         const displayHeight = 1.5;
         const backingDepth = 0.1;
 
+        // Get the user display image dimensions to calculate aspect ratio
+        const dimensions = await this.getUserImageDimensions();
+        const aspectRatio = dimensions.width / dimensions.height;
+        const aboutWidth = fixedHeight * aspectRatio;
+        const aboutHeight = fixedHeight;
+
         const aboutBacking = MeshBuilder.CreateBox("aboutBacking", {
-            width: aboutSize + 0.3,
-            height: aboutSize + 0.3,
+            width: aboutWidth + 0.3,
+            height: aboutHeight + 0.3,
             depth: backingDepth
         }, this.scene);
         aboutBacking.position = new Vector3(0, displayHeight, 0);
@@ -156,9 +162,10 @@ export class FreestandingArtBuilder extends BaseLevelBuilder {
         aboutBacking.receiveShadows = true;
         this.shadowGenerator.addShadowCaster(aboutBacking);
 
+        // Create plane with correct aspect ratio
         const aboutContent = MeshBuilder.CreatePlane("aboutContent", {
-            width: aboutSize,
-            height: aboutSize
+            width: aboutWidth,
+            height: aboutHeight
         }, this.scene);
         aboutContent.position = new Vector3(0, displayHeight, backingDepth / 2 + 0.01);
         aboutContent.rotation.y = Math.PI;
@@ -168,10 +175,10 @@ export class FreestandingArtBuilder extends BaseLevelBuilder {
         aboutContent.material = contentMat;
 
         const stand = MeshBuilder.CreateCylinder("aboutStand", {
-            height: displayHeight - aboutSize / 2,
+            height: displayHeight - aboutHeight / 2,
             diameter: 0.4
         }, this.scene);
-        stand.position = new Vector3(0, (displayHeight - aboutSize / 2) / 2, 0);
+        stand.position = new Vector3(0, (displayHeight - aboutHeight / 2) / 2, 0);
 
         const standMat = new StandardMaterial("aboutStandMat", this.scene);
         standMat.diffuseColor = new Color3(0.2, 0.2, 0.22);
@@ -181,8 +188,8 @@ export class FreestandingArtBuilder extends BaseLevelBuilder {
         this.shadowGenerator.addShadowCaster(stand);
 
         const aboutInteraction = MeshBuilder.CreateBox("aboutInteraction", {
-            width: aboutSize + 1,
-            height: aboutSize + 1,
+            width: aboutWidth + 1,
+            height: aboutHeight + 1,
             depth: 2
         }, this.scene);
         aboutInteraction.position = new Vector3(0, displayHeight, 1.5);

@@ -6,6 +6,29 @@ import { BRAND_CONFIG, GALLERY_OPTIONS } from '@/config';
 import { registerUser, createGallery, uploadProfileImage } from '@/lib';
 import styles from './create.module.css';
 
+// Character limits for form fields
+const CHAR_LIMITS = {
+    username: 30,
+    bio: 500,
+    galleryName: 50,
+    galleryDescription: 1000,
+    paintingTitle: 100,
+    paintingDescription: 500,
+};
+
+// Character counter component
+const CharCounter = ({ current, max }: { current: number; max: number }) => {
+    const remaining = max - current;
+    const isWarning = remaining <= max * 0.2 && remaining > 0;
+    const isError = remaining <= 0;
+
+    return (
+        <span className={`${styles.charCounter} ${isWarning ? styles.warning : ''} ${isError ? styles.error : ''}`}>
+            {current}/{max}
+        </span>
+    );
+};
+
 interface Painting {
     id: number;
     file: File | null;
@@ -54,6 +77,7 @@ export default function CreatePage() {
     const [submitError, setSubmitError] = useState<string | null>(null);
     const [showSuccessModal, setShowSuccessModal] = useState(false);
     const [publishedGalleryUrl, setPublishedGalleryUrl] = useState<string>('');
+    const [isDragging, setIsDragging] = useState(false);
 
     const [formData, setFormData] = useState<FormData>({
         // Account (Required)
@@ -92,6 +116,7 @@ export default function CreatePage() {
 
     const profileInputRef = useRef<HTMLInputElement>(null);
     const paintingInputRef = useRef<HTMLInputElement>(null);
+    const addPaintingInputRef = useRef<HTMLInputElement>(null);
 
     const handleInputChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value, type } = e.target;
@@ -102,6 +127,14 @@ export default function CreatePage() {
         } else {
             setFormData(prev => ({ ...prev, [name]: value }));
         }
+    };
+
+    // Sanitize username to be URL-safe (lowercase, hyphens instead of spaces)
+    const handleUsernameChange = (e: ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
+        // Convert to lowercase, replace spaces with hyphens, remove special chars
+        const sanitized = value.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-_]/g, '');
+        setFormData(prev => ({ ...prev, username: sanitized }));
     };
 
     // Auto-generate slug from gallery name
@@ -176,17 +209,41 @@ export default function CreatePage() {
         setFormData(prev => ({ ...prev, selectedPaintingIndex: index }));
     };
 
+    // Opens file picker to add a new painting directly
     const handleAddPainting = () => {
         if (formData.paintings.length < GALLERY_OPTIONS.maxPaintings) {
-            const newId = formData.paintings.length + 1;
-            setFormData(prev => ({
-                ...prev,
-                paintings: [
-                    ...prev.paintings,
-                    { id: newId, file: null, preview: null, title: '', description: '' }
-                ],
-                selectedPaintingIndex: prev.paintings.length,
-            }));
+            addPaintingInputRef.current?.click();
+        }
+    };
+
+    // Handle file selection when adding a new painting via ADD button
+    const handleAddPaintingFile = (e: ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file && formData.paintings.length < GALLERY_OPTIONS.maxPaintings) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                const newId = formData.paintings.length + 1;
+                setFormData(prev => ({
+                    ...prev,
+                    paintings: [
+                        ...prev.paintings,
+                        { id: newId, file, preview: reader.result as string, title: '', description: '' }
+                    ],
+                    selectedPaintingIndex: prev.paintings.length,
+                }));
+            };
+            reader.readAsDataURL(file);
+        }
+        // Reset input so same file can be selected again
+        e.target.value = '';
+    };
+
+    // Handle thumbnail click - if no image, open file picker directly
+    const handleThumbnailClick = (index: number) => {
+        setFormData(prev => ({ ...prev, selectedPaintingIndex: index }));
+        // If this slot doesn't have an image, open file picker immediately
+        if (!formData.paintings[index].preview) {
+            setTimeout(() => paintingInputRef.current?.click(), 50);
         }
     };
 
@@ -203,6 +260,80 @@ export default function CreatePage() {
                 };
             });
         }
+    };
+
+    // Drag and drop handlers
+    const handleDragOver = (e: React.DragEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+    };
+
+    const handleDragEnter = (e: React.DragEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setIsDragging(true);
+    };
+
+    const handleDragLeave = (e: React.DragEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        // Only set to false if we're leaving the drop zone entirely
+        if (e.currentTarget.contains(e.relatedTarget as Node)) return;
+        setIsDragging(false);
+    };
+
+    const handleDrop = (e: React.DragEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setIsDragging(false);
+
+        const files = Array.from(e.dataTransfer.files).filter(
+            file => file.type.startsWith('image/')
+        );
+
+        if (files.length === 0) return;
+
+        // Process each dropped file
+        files.forEach((file) => {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setFormData(current => {
+                    if (current.paintings.length >= GALLERY_OPTIONS.maxPaintings) {
+                        return current;
+                    }
+
+                    // Check if there's an empty slot (no image)
+                    const firstEmptyIndex = current.paintings.findIndex(p => !p.preview);
+
+                    if (firstEmptyIndex !== -1) {
+                        // Fill the first empty slot
+                        const paintings = [...current.paintings];
+                        paintings[firstEmptyIndex] = {
+                            ...paintings[firstEmptyIndex],
+                            file,
+                            preview: reader.result as string,
+                        };
+                        return {
+                            ...current,
+                            paintings,
+                            selectedPaintingIndex: firstEmptyIndex,
+                        };
+                    } else {
+                        // Add new painting slot
+                        const newId = current.paintings.length + 1;
+                        return {
+                            ...current,
+                            paintings: [
+                                ...current.paintings,
+                                { id: newId, file, preview: reader.result as string, title: '', description: '' }
+                            ],
+                            selectedPaintingIndex: current.paintings.length,
+                        };
+                    }
+                });
+            };
+            reader.readAsDataURL(file);
+        });
     };
 
     const handlePaintingFieldChange = (field: 'title' | 'description', value: string) => {
@@ -500,11 +631,16 @@ export default function CreatePage() {
                                                 type="text"
                                                 name="username"
                                                 value={formData.username}
-                                                onChange={handleInputChange}
+                                                onChange={handleUsernameChange}
                                                 className="neo-input"
-                                                placeholder="Your username"
+                                                placeholder="your-username"
+                                                maxLength={CHAR_LIMITS.username}
                                                 required
                                             />
+                                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                                <span className={styles.hint}>Lowercase, no spaces (used in your gallery URL)</span>
+                                                <CharCounter current={formData.username.length} max={CHAR_LIMITS.username} />
+                                            </div>
                                         </div>
 
                                         <div className="form-group">
@@ -516,7 +652,9 @@ export default function CreatePage() {
                                                 className="neo-textarea"
                                                 placeholder="Tell us about yourself and your art..."
                                                 rows={3}
+                                                maxLength={CHAR_LIMITS.bio}
                                             />
+                                            <CharCounter current={formData.bio.length} max={CHAR_LIMITS.bio} />
                                         </div>
 
                                         <div className={styles.twoColumns}>
@@ -557,14 +695,35 @@ export default function CreatePage() {
                             <h2 className="step-title">Upload Paintings <span className={styles.required}>*</span> ({formData.paintings.length}/{GALLERY_OPTIONS.maxPaintings})</h2>
                         </div>
                         <div className="step-content">
-                            <p className={styles.stepNote}>📌 At least one painting is required</p>
-                            {/* Painting Thumbnails Grid */}
-                            <div className="painting-grid">
+                            <p className={styles.stepNote}>📌 Drag & drop images here or click to upload</p>
+                            {/* Hidden input for adding new paintings via ADD button */}
+                            <input
+                                ref={addPaintingInputRef}
+                                type="file"
+                                accept=".jpg,.jpeg,.png"
+                                onChange={handleAddPaintingFile}
+                                hidden
+                                multiple
+                            />
+                            {/* Drop Zone with Painting Thumbnails Grid */}
+                            <div
+                                className={`painting-grid ${isDragging ? styles.dropZoneActive : ''}`}
+                                onDragOver={handleDragOver}
+                                onDragEnter={handleDragEnter}
+                                onDragLeave={handleDragLeave}
+                                onDrop={handleDrop}
+                            >
+                                {isDragging && (
+                                    <div className={styles.dropOverlay}>
+                                        <span className={styles.dropIcon}>📥</span>
+                                        <span className={styles.dropText}>Drop images here</span>
+                                    </div>
+                                )}
                                 {formData.paintings.map((painting, index) => (
                                     <div
                                         key={painting.id}
                                         className={`painting-thumb ${formData.selectedPaintingIndex === index ? 'active' : ''}`}
-                                        onClick={() => handleSelectPainting(index)}
+                                        onClick={() => handleThumbnailClick(index)}
                                     >
                                         {painting.preview ? (
                                             <img src={painting.preview} alt={`Painting ${painting.id}`} />
@@ -572,6 +731,7 @@ export default function CreatePage() {
                                             <>
                                                 <span className="painting-number">{painting.id}</span>
                                                 <span style={{ fontSize: '1.5rem' }}>🖼️</span>
+                                                <span style={{ fontSize: '0.6rem', opacity: 0.7 }}>Click to upload</span>
                                             </>
                                         )}
                                         {formData.paintings.length > 1 && (
@@ -593,9 +753,10 @@ export default function CreatePage() {
                                     <div
                                         className="painting-thumb painting-add"
                                         onClick={handleAddPainting}
+                                        title="Click to add new painting"
                                     >
                                         <span className="painting-number">+</span>
-                                        <span style={{ fontSize: '0.75rem', fontWeight: 600 }}>ADD</span>
+                                        <span style={{ fontSize: '0.65rem', fontWeight: 600 }}>ADD IMAGE</span>
                                     </div>
                                 )}
                             </div>
@@ -643,7 +804,9 @@ export default function CreatePage() {
                                                 onChange={(e) => handlePaintingFieldChange('title', e.target.value)}
                                                 className="neo-input"
                                                 placeholder="Painting title"
+                                                maxLength={CHAR_LIMITS.paintingTitle}
                                             />
+                                            <CharCounter current={selectedPainting.title.length} max={CHAR_LIMITS.paintingTitle} />
                                         </div>
 
                                         <div className="form-group">
@@ -654,7 +817,9 @@ export default function CreatePage() {
                                                 className="neo-textarea"
                                                 placeholder="Tell us about this painting..."
                                                 rows={3}
+                                                maxLength={CHAR_LIMITS.paintingDescription}
                                             />
+                                            <CharCounter current={selectedPainting.description.length} max={CHAR_LIMITS.paintingDescription} />
                                         </div>
                                     </div>
                                 </div>
@@ -679,8 +844,10 @@ export default function CreatePage() {
                                         onChange={handleGalleryNameChange}
                                         className="neo-input"
                                         placeholder="My Amazing Art Gallery"
+                                        maxLength={CHAR_LIMITS.galleryName}
                                         required
                                     />
+                                    <CharCounter current={formData.galleryName.length} max={CHAR_LIMITS.galleryName} />
                                 </div>
 
                                 <div className="form-group">
@@ -701,7 +868,9 @@ export default function CreatePage() {
                                         className="neo-textarea"
                                         placeholder="Describe your gallery exhibition..."
                                         rows={2}
+                                        maxLength={CHAR_LIMITS.galleryDescription}
                                     />
+                                    <CharCounter current={formData.galleryDescription.length} max={CHAR_LIMITS.galleryDescription} />
                                 </div>
 
                                 {/* Environment Selection */}

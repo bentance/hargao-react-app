@@ -151,8 +151,13 @@ export class ColorScreamBuilder extends BaseLevelBuilder {
         wallThickness: number, wallHeight: number, displayHeight: number,
         toCenter: Vector3
     ): Promise<void> {
-        const aboutSize = 2.5;
-        const totalWidth = aboutSize + 1.0;
+        // Get the user display image dimensions to calculate aspect ratio
+        const dimensions = await this.getUserImageDimensions();
+        const aspectRatio = dimensions.width / dimensions.height;
+        const fixedHeight = 2.5;
+        const aboutWidth = fixedHeight * aspectRatio;
+        const aboutHeight = fixedHeight;
+        const totalWidth = aboutWidth + 1.0;
 
         const wall = MeshBuilder.CreateBox("aboutWall", {
             width: totalWidth,
@@ -169,9 +174,10 @@ export class ColorScreamBuilder extends BaseLevelBuilder {
         wall.receiveShadows = true;
         this.shadowGenerator.addShadowCaster(wall);
 
+        // Create plane with correct aspect ratio
         const aboutContent = MeshBuilder.CreatePlane("aboutContent", {
-            width: aboutSize,
-            height: aboutSize
+            width: aboutWidth,
+            height: aboutHeight
         }, this.scene);
         aboutContent.position = new Vector3(
             x + toCenter.x * (wallThickness / 2 + 0.02),

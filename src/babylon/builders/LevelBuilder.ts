@@ -147,6 +147,57 @@ export abstract class BaseLevelBuilder implements ILevelBuilder {
     }
 
     /**
+     * Get user display image dimensions for aspect ratio calculation
+     */
+    protected getUserImageDimensions(): Promise<{ width: number, height: number }> {
+        // Online mode: use Firebase URL
+        if (APP_CONFIG.type === "online" && USER_CONFIG.userImageUrl) {
+            const imageUrl = USER_CONFIG.userImageUrl;
+            return new Promise((resolve) => {
+                const img = new window.Image();
+                img.onload = () => {
+                    resolve({ width: img.naturalWidth, height: img.naturalHeight });
+                };
+                img.onerror = () => {
+                    resolve({ width: 1, height: 1 }); // Fallback to square
+                };
+                img.src = imageUrl;
+            });
+        }
+
+        // Offline mode: try local files
+        if (!USER_CONFIG.displayImage) {
+            return Promise.resolve({ width: 1, height: 1 });
+        }
+
+        const extensions = ["jpg", "jpeg", "png", "webp", "gif"];
+        const filename = USER_CONFIG.displayImage;
+        const basePath = getPaintingsBasePath();
+
+        return new Promise((resolve) => {
+            let found = false;
+            let checked = 0;
+
+            for (const ext of extensions) {
+                const img = new window.Image();
+                img.onload = () => {
+                    if (!found) {
+                        found = true;
+                        resolve({ width: img.naturalWidth, height: img.naturalHeight });
+                    }
+                };
+                img.onerror = () => {
+                    checked++;
+                    if (checked === extensions.length && !found) {
+                        resolve({ width: 1, height: 1 });
+                    }
+                };
+                img.src = `${basePath}/${filename}.${ext}`;
+            }
+        });
+    }
+
+    /**
      * Apply painting texture trying multiple extensions
      */
     protected applyPaintingTexture(material: StandardMaterial, id: number): Promise<void> {

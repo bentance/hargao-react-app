@@ -100,12 +100,19 @@ export class GalleryBuilder extends BaseLevelBuilder {
     }
 
     private async createAboutSign(wallLength: number, wallHeight: number, wallDepth: number): Promise<void> {
-        const aboutX = wallLength / 2 + 3;
+        // Get the user display image dimensions to calculate aspect ratio
+        const dimensions = await this.getUserImageDimensions();
+        const aspectRatio = dimensions.width / dimensions.height;
+        const fixedHeight = 3;
+        const aboutWidth = fixedHeight * aspectRatio;
+        const aboutHeight = fixedHeight;
+
+        const aboutX = wallLength / 2 + aboutWidth / 2 + 1.5;
 
         // About sign collision box
         const aboutCollider = MeshBuilder.CreateBox("aboutCollider", {
-            width: 3.6,
-            height: 3.6,
+            width: aboutWidth + 0.6,
+            height: aboutHeight + 0.6,
             depth: 0.3
         }, this.scene);
         aboutCollider.position = new Vector3(aboutX, wallHeight / 2, 15 - wallDepth / 2);
@@ -114,8 +121,8 @@ export class GalleryBuilder extends BaseLevelBuilder {
 
         // About sign frame
         const aboutFrame = MeshBuilder.CreatePlane("aboutFrame", {
-            width: 3.5,
-            height: 3.5
+            width: aboutWidth + 0.5,
+            height: aboutHeight + 0.5
         }, this.scene);
         aboutFrame.position = new Vector3(aboutX, wallHeight / 2, 15 - wallDepth / 2 - 0.01);
 
@@ -124,10 +131,10 @@ export class GalleryBuilder extends BaseLevelBuilder {
         frameMat.emissiveColor = new Color3(0.02, 0.02, 0.03);
         aboutFrame.material = frameMat;
 
-        // About content
+        // About content - now with correct aspect ratio
         const aboutContent = MeshBuilder.CreatePlane("aboutContent", {
-            width: 3,
-            height: 3
+            width: aboutWidth,
+            height: aboutHeight
         }, this.scene);
         aboutContent.position = new Vector3(aboutX, wallHeight / 2, 15 - wallDepth / 2 - 0.02);
 
@@ -137,8 +144,8 @@ export class GalleryBuilder extends BaseLevelBuilder {
 
         // About interaction zone
         const aboutInteraction = MeshBuilder.CreateBox("aboutInteraction", {
-            width: 3.5,
-            height: 3.5,
+            width: aboutWidth + 0.5,
+            height: aboutHeight + 0.5,
             depth: 2
         }, this.scene);
         aboutInteraction.position = new Vector3(aboutX, wallHeight / 2, 15 - wallDepth / 2 - 1.5);

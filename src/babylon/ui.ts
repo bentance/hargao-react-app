@@ -340,21 +340,21 @@ export class GameUI {
         this.aboutHeader.paddingBottom = "10px";
         aboutStack.addControl(this.aboutHeader);
 
-        // About image - responsive size (phone < tablet < desktop)
+        // About image - use landscape container to handle wide images better
         this.aboutImage = new Image("aboutImage", "");
         if (isPhone) {
-            this.aboutImage.width = "180px";
-            this.aboutImage.height = "180px";
+            this.aboutImage.width = "280px";
+            this.aboutImage.height = "200px";
         } else if (isMobile) {
             // Tablet/iPad - larger images
-            this.aboutImage.width = "350px";
-            this.aboutImage.height = "350px";
+            this.aboutImage.width = "450px";
+            this.aboutImage.height = "320px";
         } else {
-            // Desktop
+            // Desktop - landscape container for wide profile images
             this.aboutImage.width = "500px";
-            this.aboutImage.height = "500px";
+            this.aboutImage.height = "350px";
         }
-        this.aboutImage.stretch = Image.STRETCH_UNIFORM;
+        this.aboutImage.stretch = Image.STRETCH_UNIFORM; // Scale to fit, preserve aspect ratio
         this.aboutImage.paddingBottom = isPhone ? "8px" : "15px";
         aboutStack.addControl(this.aboutImage);
 

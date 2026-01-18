@@ -38,6 +38,7 @@ Hargao Gallery Creator is a **drag-and-drop gallery builder** that transforms yo
 | `/featured` | Babylon.js 3D viewer showcasing featured galleries |
 | `/default` | Babylon.js 3D viewer - single local demo gallery |
 | `/feedback` | Submit feedback to help improve the platform |
+| `/nps` | Net Promoter Score feedback form |
 | `/signin` | User sign-in page |
 | `/about` | About page |
 | `/terms` | Terms & Conditions |
@@ -65,7 +66,7 @@ The admin dashboard provides tools for managing the platform:
 ### Users Tab
 - View all registered users
 - See user details (email, username, tier, galleries count)
-- View user galleries with paintings thumbnails
+- View user galleries with paintings thumbnails and **view counts**
 - Toggle "Featured" status on galleries
 - Delete users (with password confirmation)
 
@@ -78,6 +79,48 @@ The admin dashboard provides tools for managing the platform:
 - View all currently featured galleries
 - Quick links to visit each gallery
 - Remove galleries from featured list
+
+### Net Promoter Score Tab
+- View all NPS responses from users
+- See average score and breakdown (Promoters, Passives, Detractors)
+- View individual scores with comments and feedback
+
+---
+
+## Analytics & Tracking
+
+### View Count (Built-in)
+- Each gallery visit is tracked in Firestore
+- View counts displayed in admin dashboard per gallery
+- Simple, fast, no external dependencies
+
+### PostHog Analytics (Optional)
+- Rich analytics: page views, sessions, user flows
+- Session recordings: watch how users navigate
+- Automatic tracking once configured
+- Add `NEXT_PUBLIC_POSTHOG_KEY` to `.env.local` to enable
+
+---
+
+## Form Validation
+
+### Character Limits
+
+| Field | Max Characters |
+|-------|---------------|
+| Username | 30 |
+| Bio | 500 |
+| Gallery Name | 50 |
+| Gallery Description | 1000 |
+| Painting Title | 100 |
+| Painting Description | 500 |
+
+### Username Requirements
+- Lowercase letters only (a-z)
+- Numbers allowed (0-9)
+- Hyphens and underscores allowed (- _)
+- **No spaces** (automatically converted to hyphens)
+- Used in gallery URLs: `/@username/gallery-slug`
 
 ---
 
@@ -115,14 +158,29 @@ Open [http://localhost:3000](http://localhost:3000) to see the app.
 Required environment variables in `.env.local`:
 
 ```env
+# Firebase Configuration
 NEXT_PUBLIC_FIREBASE_API_KEY=your_api_key
 NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
 NEXT_PUBLIC_FIREBASE_PROJECT_ID=your_project_id
 NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your_project.appspot.com
 NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
 NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
+
+# Admin Dashboard
 NEXT_PUBLIC_ADMIN_PASSWORD=your_admin_password
+
+# Email Notifications (Gmail SMTP)
+GMAIL_USER=your_gmail@gmail.com
+GMAIL_APP_PASSWORD=your_16_char_app_password
+
+# PostHog Analytics (Optional)
+NEXT_PUBLIC_POSTHOG_KEY=phc_your_posthog_key
+NEXT_PUBLIC_POSTHOG_HOST=https://us.i.posthog.com
+
+# Base URL (for email links)
+NEXT_PUBLIC_BASE_URL=https://your-domain.com
 ```
+
 
 ---
 

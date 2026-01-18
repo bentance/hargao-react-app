@@ -45,6 +45,38 @@
     text-transform: none;
 }
 
+/* Form field hint text */
+.hint {
+    display: block;
+    font-size: 0.75rem;
+    color: #888;
+    margin-top: 4px;
+    font-style: italic;
+}
+
+/* Character counter */
+.charCounter {
+    display: block;
+    font-size: 0.7rem;
+    color: #888;
+    text-align: right;
+    margin-top: 2px;
+}
+
+.charCounter.warning {
+    color: var(--color-warning, #f59e0b);
+}
+
+.charCounter.error {
+    color: var(--color-error);
+    font-weight: 600;
+}
+
+/* Input wrapper for counter positioning */
+.inputWithCounter {
+    position: relative;
+}
+
 /* Hero GIF */
 .heroGifContainer {
     margin: var(--space-xl) auto;
@@ -646,4 +678,50 @@
     background: #B91C1C;
     transform: translateY(-2px);
     box-shadow: 4px 4px 0 var(--color-border);
+}
+
+/* Drag and Drop Styles */
+.dropZoneActive {
+    border: 3px dashed var(--color-primary) !important;
+    background: rgba(var(--color-cyan-rgb, 0, 206, 209), 0.1) !important;
+    position: relative;
+}
+
+.dropOverlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    border-radius: var(--radius-md);
+    pointer-events: none;
+}
+
+.dropIcon {
+    font-size: 3rem;
+    margin-bottom: var(--space-md);
+    animation: bounce 0.5s ease infinite alternate;
+}
+
+.dropText {
+    color: white;
+    font-size: 1.2rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+@keyframes bounce {
+    from {
+        transform: translateY(0);
+    }
+
+    to {
+        transform: translateY(-10px);
+    }
 }
